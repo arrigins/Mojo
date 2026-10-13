@@ -1,0 +1,309 @@
+<title>Mojo Character System</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@400..700&family=Onest:wght@400..600&display=swap">
+<style>
+/* Layout: a working board. Left-aligned section heads, grids of drawn specimens; the character is the only loud thing. Single light theme by choice. */
+:root{
+  --paper:#f6f5f1; --white:#fff; --ink:#1c2927; --ink-2:#56645f; --line:#e2e7e3;
+  --mint:#3fb8a2; --mint-deep:#23766a; --mint-wash:#dcefeb;
+  --sand:#f2ede8; --peri:#e5ebfd; --lilac:#ece6fb; --butter:#fbf0d6; --rose:#f8e6e2;
+  --display:"Geologica","Onest",system-ui,sans-serif; --body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --gutter:clamp(16px,4vw,40px);
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul,ol,figure{margin:0}ul,ol{padding:0;list-style:none}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.025em;text-wrap:balance}
+h1{font-size:clamp(38px,5.6vw,72px);line-height:1.03;letter-spacing:-.035em}
+h2{font-size:clamp(28px,3.6vw,46px);line-height:1.08}
+h3{font-size:19px;line-height:1.25;letter-spacing:-.01em}
+.lead{font-size:clamp(17px,1.5vw,20px);color:var(--ink-2);max-width:62ch}
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:var(--gutter)}
+.sec{padding-block:clamp(44px,6vw,88px)}
+.head{display:grid;gap:14px;margin-bottom:clamp(24px,3vw,40px);max-width:860px}
+.cap{font-size:14.5px;line-height:1.4;color:var(--ink-2)}
+.cap b{display:block;color:var(--ink);font:600 16px/1.25 var(--display);margin-bottom:2px}
+
+/* the character */
+svg.ojo{display:block;width:100%;height:auto;fill:none;stroke:currentColor;stroke-width:14;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.ojo .fill{fill:currentColor;stroke:none}
+.ojo .thin{stroke-width:6}
+.ojo .pg{transform:translate(calc(var(--dx,.51)*13px),calc(var(--dy,.86)*13px));transition:transform .16s ease-out}
+.ojo .pupil{transform-box:fill-box;transform-origin:center;animation:blink 5.2s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96.5%{transform:scaleY(.08)}}
+.ojo .draw{stroke-dasharray:1;animation:draw 2.6s ease-in-out infinite}
+@keyframes draw{0%{stroke-dashoffset:1}55%,80%{stroke-dashoffset:0}100%{stroke-dashoffset:-1}}
+@media (prefers-reduced-motion:reduce){.ojo .pupil,.ojo .draw{animation:none}.ojo .pg{transition:none}}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(24px,4vw,64px);align-items:center;padding-block:clamp(28px,5vw,72px)}
+.hero__copy{display:grid;gap:22px}
+.hero__art{background:linear-gradient(135deg,#aee1db 0%,#6fcbb9 52%,#3ebda8 100%);border-radius:40px;padding:clamp(28px,5vw,64px);color:var(--white)}
+.eq{min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;font:600 clamp(22px,2.6vw,34px)/1.1 var(--display);letter-spacing:-.02em}
+.eq span{color:var(--ink-2);font-weight:400}
+.eq mark{background:var(--mint-wash);color:var(--mint-deep);border-radius:10px;padding:2px 10px}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+
+/* anatomy */
+.anat{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,56px);align-items:center;background:var(--white);border-radius:40px;padding:clamp(20px,4vw,56px)}
+.anat svg{color:var(--mint-deep)}
+.anat .hl{color:#efb648}
+.parts{display:grid;gap:18px}
+.parts li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;align-items:start}
+.parts i{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font:600 17px var(--display);font-style:normal;background:var(--mint-wash);color:var(--mint-deep)}
+@media (max-width:860px){.anat{grid-template-columns:1fr}}
+
+/* specimen grids */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.tile{background:var(--white);border-radius:26px;padding:20px 20px 18px;display:grid;gap:14px;align-content:space-between;color:var(--mint-deep)}
+.tile svg{padding:6px 10px 0}
+.tile--c{color:var(--white)}
+.tile--c .cap,.tile--c .cap b{color:var(--white)}
+.tile--c .cap{opacity:.92}
+.grid--fam{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.badge{justify-self:start;font:500 12.5px var(--body);padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.25)}
+
+/* ui mocks */
+.ui{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.mock{background:var(--white);border-radius:26px;padding:26px;display:grid;gap:14px;justify-items:center;text-align:center;align-content:center;min-height:270px}
+.mock>[data-o]>svg{width:150px;color:var(--mint-deep)}
+.mock p{font-size:15px;color:var(--ink-2);max-width:26ch}
+.mock b{font:600 18px var(--display)}
+.mock--err>[data-o]>svg{color:#b5503f}
+.avs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.av{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;color:var(--white);padding:9px}
+.icons{display:flex;gap:18px;align-items:flex-end;justify-content:center}
+.appicon{width:118px;height:118px;border-radius:28px;background:linear-gradient(135deg,#7fd2c2,#3ebda8);color:#fff;display:grid;place-items:center;padding:14px;box-shadow:0 18px 30px -16px rgba(20,90,78,.6)}
+.fav{width:44px;height:44px;border-radius:12px;background:var(--mint-deep);color:#fff;display:grid;place-items:center;padding:7px}
+.toast{display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--white);border-radius:18px;padding:12px 20px 12px 12px;font-size:15px;text-align:left}
+.toast svg{width:64px;color:#9fe0d2}
+
+/* illustration directions */
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.panel{background:var(--white);border-radius:32px;padding:clamp(20px,3vw,36px);display:grid;gap:22px;align-content:start}
+.panel__row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;align-items:end}
+.peek{position:relative;padding-top:74px}
+.peek svg{position:absolute;top:0;left:50%;width:min(150px,100%);transform:translateX(-50%);color:var(--mint-deep)}
+.peek__card{position:relative;background:var(--paper);border-radius:18px;padding:18px;display:grid;gap:8px}
+.peek__card i{display:block;height:9px;border-radius:5px;background:#dfe6e3}
+.peek__card i:first-child{width:60%;background:var(--ink)}
+.super{border-radius:22px;background:var(--mint-deep);color:#57c9b4;height:176px;overflow:hidden;position:relative}
+.super svg{position:absolute;width:128%;left:-14%;top:10px}
+.super span{position:absolute;left:16px;right:12px;bottom:14px;color:#fff;font:600 16px/1.2 var(--display)}
+.under{display:grid;gap:4px;align-content:center;font:600 24px/1.1 var(--display);letter-spacing:-.02em}
+.under svg{width:150px;color:var(--mint);stroke-width:9}
+.pose{color:var(--mint-deep);background:var(--paper);border-radius:22px;padding:14px 18px 8px}
+.pose:nth-child(2){color:#6a55d6}.pose:nth-child(3){color:#3a78d4}.pose:nth-child(4){color:#a9795a}
+.verdict{background:var(--mint-wash);border-radius:16px;padding:14px 18px;font-size:15.5px;line-height:1.45}
+.verdict b{font-family:var(--display)}
+@media (max-width:860px){.duo{grid-template-columns:1fr}}
+
+/* current cast */
+.now{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:28px}
+.now img{width:100%;height:210px;object-fit:cover;object-position:top;border-radius:22px;background:var(--white)}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;counter-reset:r}
+.rules li{background:var(--white);border-radius:26px;padding:24px;display:grid;gap:8px;align-content:start}
+.rules p{font-size:15.5px;line-height:1.5;color:var(--ink-2)}
+.cast{width:100%;border-collapse:collapse;background:var(--white);border-radius:26px;overflow:hidden;font-size:15.5px}
+.cast th,.cast td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+.cast tr:last-child td{border-bottom:0}
+.cast th{font:500 13.5px var(--body);color:var(--ink-2)}
+.cast td:first-child{font:600 16px var(--display);white-space:nowrap}
+.cast .new{font:500 12px var(--body);background:#efb648;border-radius:999px;padding:2px 8px;margin-left:8px;vertical-align:2px}
+.tablewrap{overflow-x:auto;border-radius:26px}
+.next{background:var(--ink);color:#d5e0dc;border-radius:40px;padding:clamp(24px,4vw,56px);display:grid;gap:18px}
+.next h2{color:var(--white)}
+.next ol{display:grid;gap:10px;list-style:decimal;padding-left:22px;max-width:70ch}
+footer{padding-block:28px 48px;font-size:13.5px;color:var(--ink-2)}
+</style>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="hero__copy">
+      <h1>В логотипе Mojo уже живёт персонаж</h1>
+      <div class="eq">M<mark>OJO</mark> <span>→</span> ojo <span>по-испански «глаз»</span></div>
+      <p class="lead">Две буквы O смотрят, J стоит на месте носа, линия сверху работает как чубчик. Ниже показано, как из этого вырастает герой бренда и общая система для всех иллюстраций Mojo. Рабочее имя героя: Оджо.</p>
+      <p class="cap">Подвигайте курсором: все глаза на странице следят за ним так же, как в логотипе на сайте.</p>
+    </div>
+    <div class="hero__art" data-o='{"m":1,"track":1}'></div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="anat">
+      <div data-o='{"track":1,"anat":1}'></div>
+      <ul class="parts">
+        <li><i>1</i><div class="cap"><b>Глаза — это буквы O</b>Кольцо и зрачок. Зрачок всегда лежит на краю кольца, оба глаза смотрят в одну сторону. Этим глазам подчиняются все персонажи бренда.</div></li>
+        <li><i>2</i><div class="cap"><b>Нос — это буква J</b>Не меняется никогда. По нему герой узнаётся даже без чубчика.</div></li>
+        <li><i>3</i><div class="cap"><b>Чубчик — это линия от O до O</b>Единственная подвижная часть. Одна линия той же толщины, что и буквы; её форма несёт смысл: роль, раздел продукта, состояние.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="head"><h2>Чубчик как язык</h2><p class="lead">Меняется только верхняя линия. Каждая форма закреплена за смыслом, поэтому герой становится ещё и системой знаков для разделов и состояний.</p></div>
+    <div class="grid" id="tops"></div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="head"><h2>Эмоции</h2><p class="lead">Рта у героя нет, и он не нужен: всё играют зрачки и веки. Набор маленький, зато читается в размере значка.</p></div>
+    <div class="grid" id="emo"></div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="head"><h2>Оджо в интерфейсе</h2><p class="lead">Самое дешёвое и самое заметное применение: состояния продукта и сайта. Сейчас там пусто или стоят случайные иконки.</p></div>
+    <div class="ui">
+      <div class="mock"><div data-o='{"top":"orig","draw":1,"look":[1,0]}'></div><b>Loading the timetable</b><p>Линия рисует сама себя, пока идёт загрузка.</p></div>
+      <div class="mock"><div data-o='{"top":"curl","eyes":"sleep"}'></div><b>No homework for today</b><p>Пустое состояние: герой спит.</p></div>
+      <div class="mock mock--err"><div data-o='{"top":"tangle","eyes":"dizzy"}'></div><b>Something went wrong</b><p>Ошибка: линия запуталась.</p></div>
+      <div class="mock"><div class="toast"><div data-o='{"top":"check","eyes":"happy"}'></div><span><b style="display:block;font-size:16px">Grades saved</b>Class 7B, Biology</span></div><p>Подтверждение действия.</p>
+        <div class="avs" id="avs"></div><p>Аватары по умолчанию вместо серого силуэта.</p></div>
+      <div class="mock"><div class="icons"><div class="appicon" data-o='{"top":"orig"}'></div><div class="fav" data-o='{"top":"none","nose":0,"vb":"40 106 220 88"}'></div></div><b>Иконка приложения и фавикон</b><p>В мелком размере остаются одни глаза.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="head"><h2>Оджо в иллюстрации</h2><p class="lead">Два пути. Я бы взял первый как основной, а второй оставил для редких больших сюжетов.</p></div>
+    <div class="duo">
+      <div class="panel"><h3>А. Без тела: выглядывает, подчёркивает, заполняет фон</h3>
+        <div class="panel__row">
+          <div class="peek"><div data-o='{"top":"orig","track":1}'></div><div class="peek__card"><i></i><i></i><i style="width:70%"></i></div></div>
+          <div class="super"><div data-o='{"top":"none","nose":0,"track":1,"vb":"40 106 220 88"}'></div><span>Крупный план как фон</span></div>
+          <div class="under">One place<br>for the whole school<svg class="ojo" viewBox="70 44 152 80"><path d="M78,116 C80,88 100,60 121,58 C140,56 136,78 134,88 C131,104 148,104 152,88 C156,70 160,52 177,52 C190,52 196,78 215,116"/></svg></div>
+        </div>
+        <p class="verdict"><b>Почему это основной путь.</b> Он не требует иллюстратора на каждый экран, не спорит с животными и всегда выглядит как логотип. Линия чубчика заодно становится фирменным подчёркиванием и разделителем.</p>
+      </div>
+      <div class="panel"><h3>Б. С телом: простая фигура той же линией</h3>
+        <div class="panel__row" id="poses"></div>
+        <p class="verdict"><b>Где уместно.</b> Обучающие сценарии, онбординг, стикеры. Это эскиз направления: тело нужно дорисовать руками, в коде оно выходит схематичным.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="head"><h2>Семья: те же глаза, тот же нос, другая линия</h2><p class="lead">Главная находка. У льва, кошки и зайца уже сейчас большие круглые глаза. Если построить всех животных на глазах логотипа, а уши и гриву рисовать той самой линией от O до O, герои сайта и логотип станут одной системой. И новых персонажей можно добавлять без потери стиля.</p></div>
+    <div class="grid grid--fam" id="fam"></div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="head"><h2>Что поменять в нынешних иллюстрациях</h2><p class="lead">Так герои выглядят на сайте сейчас. Они обаятельные, но системы в них нет: заяц встречается в четырёх нарядах, кошка в двух, глаза у всех нарисованы по-разному.</p></div>
+    <div class="now"><img src="%%lion%%" alt="Лев с сайта Mojo"><img src="%%cat_teacher%%" alt="Кошка-учитель с указкой"><img src="%%rabbit%%" alt="Заяц в фиолетовом худи"><img src="%%rabbit_phone%%" alt="Заяц в очках и синем поло с телефоном"><img src="%%faq_rabbit%%" alt="Заяц в синем худи"></div>
+    <ul class="rules">
+      <li><h3>Одни глаза на всех</h3><p>Кольцо и зрачок на краю, как в логотипе. Сейчас у каждого героя свой блик, свой размер зрачка и своё направление взгляда.</p></li>
+      <li><h3>Один герой, одна роль</h3><p>Лев всегда руководитель, кошка всегда учитель. Наряд не меняется от страницы к странице, меняются поза и предмет в руках.</p></li>
+      <li><h3>Уши и грива одной линией</h3><p>Контур головы сверху повторяет чубчик логотипа: та же толщина, те же скругления.</p></li>
+      <li><h3>Палитра из бренда</h3><p>Мятный как общий, плюс по одному цвету на героя. Коричневые и серые градиенты уходят.</p></li>
+      <li><h3>Герой всегда чем-то занят</h3><p>В каждой сцене он держит или показывает кусочек интерфейса. Сейчас половина героев просто стоит рядом с текстом.</p></li>
+      <li><h3>Живые на сайте</h3><p>Моргают и следят за курсором, как логотип. Для этого глаза в исходниках должны лежать отдельным слоем.</p></li>
+    </ul>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="head"><h2>Состав</h2><p class="lead">Предложение по ролям. Новые герои закрывают те части продукта, у которых сейчас нет лица.</p></div>
+    <div class="tablewrap"><table class="cast">
+      <thead><tr><th>Герой</th><th>Роль</th><th>Где появляется</th></tr></thead>
+      <tbody>
+        <tr><td>Оджо</td><td>Сам продукт</td><td>Логотип, состояния интерфейса, Mojo AI, значки, анимация</td></tr>
+        <tr><td>Лев</td><td>Руководитель школы</td><td>Управление, аналитика, внедрение</td></tr>
+        <tr><td>Кошка</td><td>Учитель</td><td>Журнал, планирование, отчёты</td></tr>
+        <tr><td>Зайчонок</td><td>Ученик</td><td>Домашние задания, расписание, портфолио</td></tr>
+        <tr><td>Заяц</td><td>Родитель</td><td>Мобильное приложение, новости, оплата</td></tr>
+        <tr><td>Сова<span class="new">новый</span></td><td>Академический директор</td><td>Оценивание, диагностика, наблюдение уроков</td></tr>
+        <tr><td>Лис<span class="new">новый</span></td><td>Администратор</td><td>Приём, роли и доступы, документы</td></tr>
+        <tr><td>Медведь<span class="new">новый</span></td><td>Забота о детях</td><td>Питание, медкабинет, дежурства, пансион</td></tr>
+        <tr><td>Ёж<span class="new">новый</span></td><td>Поддержка</td><td>FAQ, документация, чат с командой Mojo</td></tr>
+        <tr><td>Мышонок<span class="new">новый</span></td><td>Младшая школа</td><td>Кружки, Mojo Points, первые шаги в приложении</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="next">
+    <h2>Что дальше</h2>
+    <ol>
+      <li>Утвердить конструкцию: глаза, нос, толщина линии, правила для чубчика.</li>
+      <li>Выбрать 8–10 форм чубчика и закрепить за ними смыслы.</li>
+      <li>Перерисовать трёх нынешних героев на общих глазах, затем добавить новых.</li>
+      <li>Поставить Оджо в состояния интерфейса на сайте и в приложении.</li>
+    </ol>
+    <p class="cap" style="color:#9fb0ab">Всё на этой доске нарисовано кодом по геометрии логотипа: это схема системы, а не готовые иллюстрации. Полноцветных героев с телом нужно рисовать в Figma или генерировать отдельно.</p>
+  </section>
+  <footer>Концепт развития иллюстраций для портфолио. Не является официальным материалом Mojo.</footer>
+</div>
+
+<script>
+(function(){
+  var TOP={
+    orig:"M78,116 C80,88 100,60 121,58 C140,56 136,78 134,88 C131,104 148,104 152,88 C156,70 160,52 177,52 C190,52 196,78 215,116",
+    curl:"M78,116 C78,70 120,50 150,60 C176,70 170,96 152,94 C138,92 140,74 156,72 C186,68 214,86 215,116",
+    wave:"M78,116 C84,56 112,56 124,82 C136,106 164,106 176,82 C188,56 212,56 215,116",
+    bolt:"M78,116 L96,56 L124,96 L150,46 L176,96 L204,56 L215,116",
+    heart:"M78,116 C86,104 120,108 150,104 C120,80 118,48 138,48 C148,48 150,58 150,64 C150,58 152,48 162,48 C182,48 180,80 150,104 C180,108 208,104 215,116",
+    cap:"M78,116 V94 H222 V116 M96,74 L150,54 L204,74 L150,94 Z M204,74 V100",
+    crown:"M78,116 L70,60 L110,90 L150,46 L190,90 L230,60 L222,116",
+    signal:"M78,116 C78,90 110,84 150,84 C190,84 215,90 215,116 M150,84 V56",
+    bulb:"M78,116 C84,98 120,104 138,100 C118,84 122,48 150,48 C178,48 182,84 162,100 C180,104 208,98 215,116",
+    check:"M78,116 L96,82 L130,104 L204,44 L215,116",
+    tangle:"M78,116 C60,50 150,30 140,80 C132,120 100,60 150,58 C200,56 160,120 180,84 C196,56 230,70 215,116",
+    none:"",
+    rabbit:"M78,116 C70,70 84,28 100,30 C116,32 118,84 124,100 C130,114 170,114 176,100 C182,84 184,32 200,30 C216,28 230,70 222,116",
+    hare:"M78,116 C70,70 84,28 100,30 C116,32 118,84 124,100 C130,114 170,114 176,100 C180,84 182,44 200,44 C218,44 240,56 250,74 C232,66 218,70 214,84 C216,96 220,106 222,116",
+    cat:"M70,120 L80,60 L116,96 Q150,84 184,96 L220,60 L230,120",
+    lion:"M62,128 C40,100 60,78 80,84 C78,58 108,48 122,66 C134,44 166,44 178,66 C192,48 222,58 220,84 C240,78 260,100 238,128",
+    bear:"M66,124 C44,112 44,76 68,76 C84,76 90,90 96,98 Q150,74 204,98 C210,90 216,76 232,76 C256,76 256,112 234,124",
+    owl:"M60,126 L64,66 L110,104 L150,120 L190,104 L236,66 L240,126",
+    fox:"M64,122 L50,40 L112,98 Q150,90 188,98 L250,40 L236,122",
+    hedgehog:"M62,126 L70,84 L88,104 L100,64 L122,92 L138,54 L150,88 L166,56 L180,92 L202,66 L212,104 L230,84 L238,126",
+    mouse:"M64,124 C30,110 30,54 66,54 C92,54 102,82 104,100 Q150,86 196,100 C198,82 208,54 234,54 C270,54 270,110 236,124"
+  };
+  function eye(x,y,k){
+    if(k==="happy")return '<path d="M'+(x-30)+','+(y+8)+' A30,30 0 0 1 '+(x+30)+','+(y+8)+'"/>';
+    if(k==="sleep")return '<path d="M'+(x-30)+','+(y-6)+' A30,30 0 0 0 '+(x+30)+','+(y-6)+'"/>';
+    var r='<circle cx="'+x+'" cy="'+y+'" r="30"/>';
+    if(k==="wow")return r+'<circle class="fill" cx="'+x+'" cy="'+y+'" r="4.5"/>';
+    if(k==="heart")return r+'<path class="fill" d="M'+x+','+(y+9)+' C'+(x-15)+','+(y-2)+' '+(x-7)+','+(y-13)+' '+x+','+(y-5)+' C'+(x+7)+','+(y-13)+' '+(x+15)+','+(y-2)+' '+x+','+(y+9)+' Z"/>';
+    if(k==="dizzy")return r+'<path class="thin" d="M'+(x-8)+','+(y-8)+' l16,16 M'+(x+8)+','+(y-8)+' l-16,16"/>';
+    var p='<g class="pg"><circle class="fill pupil" cx="'+x+'" cy="'+y+'" r="6.6"/></g>';
+    if(k==="lid")return r+p+'<path class="thin" d="M'+(x-21)+','+(y-8)+' H'+(x+21)+'"/>';
+    return r+p;
+  }
+  function ojo(o){
+    o=o||{};var e=o.eyes||"open",el=e.pop?e[0]:e,er=e.pop?e[1]:e,top=TOP[o.top||"orig"],look=o.look||[.51,.86];
+    var vb=o.vb||(o.m?"-48 22 318 196":"14 20 272 196"),s='<svg class="ojo'+(o.track?" track":"")+'" viewBox="'+vb+'" style="--dx:'+look[0]+';--dy:'+look[1]+'" role="img" aria-label="'+(o.label||"Оджо")+'">';
+    s+=(o.under||"");
+    if(o.m)s+='<path d="M-33,181 V122 L-4,166 L25,122 V181"/>';
+    if(top)s+='<path'+(o.draw?' class="draw" pathLength="1"':'')+(o.anat?' class="hl"':'')+' d="'+top+'"/>';
+    if(o.top==="signal")s+='<circle class="fill" cx="150" cy="46" r="8"/><path class="thin" d="M126,40 C130,24 170,24 174,40"/>';
+    if(o.top==="bulb")s+='<path class="thin" d="M150,34 V24 M118,46 L110,38 M182,46 L190,38"/>';
+    s+=eye(84,150,el)+eye(216,150,er);
+    if(o.nose!==0)s+='<path d="M153,143 V178 C153,198 132,204 119,193"/>';
+    return s+(o.extra||"")+"</svg>";
+  }
+  [].forEach.call(document.querySelectorAll("[data-o]"),function(n){n.innerHTML=ojo(JSON.parse(n.dataset.o))});
+  function tile(o,name,text,bg,badge){return '<div class="tile'+(bg?' tile--c" style="background:'+bg:'')+'">'+(badge?'<span class="badge">'+badge+'</span>':'')+ojo(o)+'<div class="cap"><b>'+name+'</b>'+text+'</div></div>'}
+  document.getElementById("tops").innerHTML=[
+    ["orig","Исходный","Бренд, главная страница, всё общее"],["cap","Шапочка","Learning process, учёба"],["crown","Корона","Школьным руководителям"],["heart","Сердце","Wellbeing, забота, родители"],
+    ["signal","Антенна","Communication: новости, чаты, уведомления"],["bulb","Лампочка","Идеи, подсказки, блог"],["bolt","Молния","Mojo AI, быстрые действия"],["wave","Волна","Спокойное состояние, фон, разделители"],
+    ["curl","Завиток","Пустые состояния, ожидание"],["check","Галочка","Готово, сохранено"],["tangle","Клубок","Ошибка, что-то сломалось"]
+  ].map(function(t){return tile({top:t[0],track:1},t[1],t[2])}).join("");
+  document.getElementById("emo").innerHTML=[
+    [{track:1},"Внимание","Обычное состояние, следит за курсором"],[{eyes:"happy"},"Радость","Успех, похвала, Mojo Points"],[{eyes:["open","happy"],look:[.2,.2]},"Подмигивание","Подсказки и советы"],[{eyes:"wow"},"Удивление","Новая функция, обновление"],
+    [{eyes:"lid",look:[0,1]},"Сомнение","Проверьте данные, предупреждение"],[{eyes:"heart"},"Любовь","Отзывы, благодарности"],[{eyes:"sleep"},"Сон","Нет данных, выходной, каникулы"],[{look:[0,-1]},"Размышление","Mojo AI готовит ответ"]
+  ].map(function(t){return tile(t[0],t[1],t[2])}).join("");
+  document.getElementById("avs").innerHTML=[["#23766a","orig"],["#6a55d6","wave"],["#3a78d4","curl"],["#a9795a","crown"],["#b5503f","heart"]].map(function(a){return '<div class="av" style="background:'+a[0]+'">'+ojo({top:a[1]})+"</div>"}).join("");
+  document.getElementById("fam").innerHTML=[
+    ["lion","Лев","Руководитель школы","#b98658",""],["cat","Кошка","Учитель","#e3975f",""],["rabbit","Зайчонок","Ученик","#8f6ad8",""],["hare","Заяц","Родитель: одно ухо согнуто","#3ba995",""],
+    ["owl","Сова","Академический директор","#3a78d4","новый"],["fox","Лис","Администратор, приём","#dd6b3c","новый"],["bear","Медведь","Питание, медкабинет, пансион","#7b5b47","новый"],["hedgehog","Ёж","Поддержка и документация","#5d6b66","новый"],["mouse","Мышонок","Младшая школа","#8e9cb3","новый"]
+  ].map(function(f){return tile({top:f[0],track:1,label:f[1]},f[1],f[2],f[3],f[4])}).join("");
+  var body='<rect x="100" y="216" width="100" height="84" rx="38"/>',legs='<path d="M128,300 V328 M172,300 V328"/>',vb="0 20 320 322";
+  document.getElementById("poses").innerHTML=[
+    [body+legs+'<path d="M100,248 C84,254 78,268 80,280 M200,242 C220,234 232,216 230,198"/>',{},"Привет"],
+    [body+legs+'<rect x="112" y="238" width="76" height="50" rx="8"/><path class="thin" d="M150,238 V288"/>',{look:[0,1]},"Читает"],
+    [body+legs+'<path d="M100,248 C84,254 78,268 80,280 M200,246 L250,228"/><path class="thin" d="M272,240 V214 M288,240 V192 M304,240 V204"/>',{look:[1,.2]},"Показывает"],
+    [body+'<path d="M128,300 L114,326 M172,300 L186,326 M100,242 C80,230 72,212 76,198 M200,242 C220,230 228,212 224,198"/><path class="thin" d="M40,90 h16 M48,82 v16 M262,60 h16 M270,52 v16"/>',{eyes:"happy",top:"check"},"Получилось"]
+  ].map(function(p){var o=p[1];o.extra=p[0];o.vb=vb;return '<div class="pose">'+ojo(o)+'<div class="cap" style="text-align:center;padding-top:4px">'+p[2]+"</div></div>"}).join("");
+
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
+    var raf=0,px=0,py=0,list=[].slice.call(document.querySelectorAll("svg.track"));
+    addEventListener("pointermove",function(e){if(e.pointerType==="touch")return;px=e.clientX;py=e.clientY;if(!raf)raf=requestAnimationFrame(look)},{passive:true});
+    function look(){raf=0;list.forEach(function(s){var r=s.getBoundingClientRect();if(r.bottom<-100||r.top>innerHeight+100)return;
+      var a=Math.atan2(py-(r.top+r.height*.62),px-(r.left+r.width/2));s.style.setProperty("--dx",Math.cos(a).toFixed(3));s.style.setProperty("--dy",Math.sin(a).toFixed(3))})}
+  }
+})();
+</script>

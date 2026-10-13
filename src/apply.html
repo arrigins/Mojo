@@ -1,0 +1,338 @@
+<title>Mojo Brand in Use</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@400..700&family=Onest:wght@400..600&display=swap">
+<style>
+/* Layout: a working board of mockups. Left-aligned heads, grids of drawn carriers; the characters carry all the colour. Single light theme by choice. */
+:root{
+  --paper:#f6f5f1; --white:#fff; --ink:#1c2927; --ink-2:#56645f; --line:#e2e7e3;
+  --mint:#3fb8a2; --mint-deep:#23766a; --mint-wash:#dcefeb;
+  --sand:#f2ede8; --peri:#e5ebfd; --lilac:#ece6fb; --butter:#fbf0d6; --rose:#f8e6e2;
+  --grad:linear-gradient(135deg,#aee1db 0%,#6fcbb9 52%,#3ebda8 100%);
+  --display:"Geologica","Onest",system-ui,sans-serif; --body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --gutter:clamp(16px,4vw,40px);
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul,ol,figure{margin:0}ul,ol{padding:0;list-style:none}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.025em;text-wrap:balance}
+h1{font-size:clamp(38px,5.6vw,72px);line-height:1.03;letter-spacing:-.035em}
+h2{font-size:clamp(28px,3.6vw,46px);line-height:1.08}
+h3{font-size:19px;line-height:1.25;letter-spacing:-.01em}
+.lead{font-size:clamp(17px,1.5vw,20px);color:var(--ink-2);max-width:64ch}
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:var(--gutter)}
+.sec{padding-bottom:clamp(48px,7vw,96px)}
+.head{display:grid;gap:14px;margin-bottom:clamp(24px,3vw,40px);max-width:880px}
+.cap{font-size:14.5px;line-height:1.4;color:var(--ink-2)}
+.cap b{display:block;color:var(--ink);font:600 16px/1.25 var(--display);margin-bottom:2px}
+.sub{font:600 22px/1.2 var(--display);letter-spacing:-.015em;margin:clamp(28px,4vw,44px) 0 16px}
+
+/* character */
+.oj{fill:none;stroke:currentColor;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
+svg.ojo{display:block;width:100%;height:auto;overflow:visible}
+.oj .fill{fill:currentColor;stroke:none}
+.oj .thin{stroke-width:6}
+.oj .pg{transform:translate(calc(var(--dx,.51)*13px),calc(var(--dy,.86)*13px));transition:transform .16s ease-out}
+.oj .pupil{transform-box:fill-box;transform-origin:center;animation:blink 5.2s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96.5%{transform:scaleY(.08)}}
+@media (prefers-reduced-motion:reduce){.oj .pupil{animation:none}.oj .pg{transition:none}}
+svg text{font-family:var(--display);font-weight:600;letter-spacing:-.02em}
+
+.hero{display:grid;gap:22px;padding-block:clamp(28px,5vw,72px) clamp(36px,5vw,64px);max-width:940px}
+.jump{display:flex;flex-wrap:wrap;gap:8px}
+.jump a{font:500 15px var(--body);padding:10px 18px;border-radius:999px;background:var(--white);color:var(--ink);text-decoration:none}
+.jump a:hover{background:var(--mint-wash)}
+:focus-visible{outline:3px solid #6a55d6;outline-offset:3px;border-radius:8px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{background:var(--white);border-radius:28px;padding:18px;display:grid;gap:14px;align-content:start}
+.card>.cap{padding:0 6px 4px}
+
+/* phones */
+.phones{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px 16px;justify-items:center}
+.phone{width:208px;aspect-ratio:9/18.5;border:7px solid var(--ink);border-radius:36px;background:var(--white);overflow:hidden;display:flex;flex-direction:column;font-size:13px;line-height:1.35;position:relative}
+.phone__in{flex:1;display:flex;flex-direction:column;gap:10px;padding:26px 14px 12px;min-height:0}
+.phone h4{margin:0;font:600 17px/1.2 var(--display);letter-spacing:-.015em}
+.phone small{color:var(--ink-2);font-size:11.5px}
+.row{background:var(--paper);border-radius:14px;padding:9px 11px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.row b{font-weight:600}
+.pill{font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--mint-deep);color:#fff;white-space:nowrap}
+.tabbar{display:flex;justify-content:space-around;padding:9px 0 12px;border-top:1px solid var(--line)}
+.tabbar i{width:20px;height:20px;border-radius:7px;background:#d5dcd8}
+.tabbar i.on{background:var(--mint-deep)}
+.btnm{display:block;text-align:center;background:var(--mint-deep);color:#fff;border-radius:999px;padding:10px;font-weight:600}
+.fig{display:grid;gap:12px;justify-items:center}
+.fig .cap{text-align:center;max-width:26ch}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:20px}
+.push{background:var(--white);border-radius:22px;padding:14px 16px;display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;align-items:center;font-size:14px;line-height:1.35}
+.push>div:first-child{width:52px;height:52px;border-radius:14px;background:var(--grad);color:#fff;padding:7px;display:grid;place-items:center}
+.push b{display:block;font:600 15px var(--display)}
+
+/* social */
+.posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.posts--s{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.sp{aspect-ratio:1;border-radius:26px;padding:22px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative}
+.sp--st{aspect-ratio:9/16}
+.sp__t{font:600 clamp(21px,2vw,26px)/1.12 var(--display);letter-spacing:-.025em;text-wrap:balance;position:relative}
+.sp__s{font-size:13.5px;line-height:1.35;opacity:.85;position:relative}
+.sp__art{width:62%;align-self:flex-end}
+.sp__big{font:600 64px/1 var(--display);letter-spacing:-.04em}
+.mk{width:54px}
+.avrow{display:flex}
+.avrow span{width:44px;height:44px;border-radius:50%;margin-right:-9px;border:3px solid var(--ink);padding:6px;color:#fff}
+.stk{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.stk li{background:var(--white);border-radius:24px;padding:16px 14px 12px;text-align:center;font:600 15px var(--display);color:var(--mint-deep);display:grid;gap:6px}
+.stk li span{color:var(--ink)}
+.mail{background:var(--white);border-radius:26px;overflow:hidden;font-size:14px}
+.mail__top{background:var(--grad);color:#fff;padding:22px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.mail__top>div{width:150px}
+.mail__top b{font:600 22px/1.15 var(--display);color:var(--ink);max-width:9em}
+.mail__body{padding:20px 22px 22px;display:grid;gap:10px;color:var(--ink-2)}
+.mail__body i{display:block;height:8px;border-radius:4px;background:var(--line)}
+
+/* voice */
+.voice{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:16px}
+.voice li{background:var(--white);border-radius:26px;padding:24px;display:grid;gap:8px;align-content:start}
+.voice p{font-size:15.5px;color:var(--ink-2);line-height:1.5}
+.wall{display:flex;flex-wrap:wrap;gap:10px}
+.wall li{border-radius:999px;padding:12px 22px;font:600 clamp(17px,1.8vw,22px)/1.2 var(--display);letter-spacing:-.02em;background:var(--white)}
+.wall li small{display:block;font:400 13px var(--body);letter-spacing:0;color:var(--ink-2);margin-top:2px}
+.wall li:nth-child(3n+1){background:var(--mint-deep);color:#fff}
+.wall li:nth-child(3n+1) small{color:#cfe6e0}
+.wall li:nth-child(5n+3){background:var(--lilac)}
+
+/* merch */
+.merch{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.merch--kit{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.m{border-radius:28px;padding:14px 14px 18px;display:grid;gap:8px;background:var(--white)}
+.m svg.gar{display:block;width:100%;height:auto;border-radius:20px}
+.m .cap{padding:0 8px}
+.m--wide{grid-column:span 2}
+@media (max-width:640px){.m--wide{grid-column:auto}}
+
+/* forum */
+.scene{background:var(--white);border-radius:32px;padding:10px;overflow-x:auto}
+.scene svg{display:block;width:100%;min-width:760px;height:auto;border-radius:24px}
+.slides{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.sl{aspect-ratio:16/9;border-radius:20px;padding:6% 7%;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative}
+.sl b{font:600 clamp(16px,1.7vw,22px)/1.12 var(--display);letter-spacing:-.025em;text-wrap:balance}
+.sl small{font-size:11.5px;line-height:1.3;opacity:.8}
+.sl__n{font:600 clamp(36px,4vw,52px)/1 var(--display);letter-spacing:-.04em}
+.qr{width:50px;height:50px;font-size:11px;border-radius:12px;background:#fff;color:var(--ink);display:grid;place-items:center;font:600 13px var(--display);align-self:flex-end}
+.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.acts li{background:var(--white);border-radius:26px;padding:24px;display:grid;gap:8px;align-content:start}
+.acts i{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font:600 17px var(--display);font-style:normal;background:var(--mint-wash);color:var(--mint-deep);margin-bottom:4px}
+.acts p{font-size:15.5px;color:var(--ink-2);line-height:1.5}
+.next{background:var(--ink);color:#d5e0dc;border-radius:40px;padding:clamp(24px,4vw,56px);display:grid;gap:18px}
+.next h2{color:var(--white)}
+.next ol{display:grid;gap:10px;list-style:decimal;padding-left:22px;max-width:72ch}
+footer{padding-block:28px 48px;font-size:13.5px;color:var(--ink-2)}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <h1>Система Mojo в деле</h1>
+    <p class="lead">Как логотип, Оджо и семья героев живут на разных носителях: в самом продукте, в соцсетях, на вещах и на стенде делового форума. Все макеты нарисованы кодом по геометрии логотипа, глаза следят за курсором.</p>
+    <nav class="jump" aria-label="Разделы"><a href="#product">В продукте</a><a href="#online">Онлайн</a><a href="#voice">Голос</a><a href="#merch">Мерч</a><a href="#forum">Форум</a></nav>
+  </header>
+
+  <section class="sec" id="product">
+    <div class="head"><h2>В продукте</h2><p class="lead">Оджо отвечает за сам продукт: встречает, ждёт, подтверждает и сообщает об ошибках. Герои семьи появляются там, где речь о конкретной роли.</p></div>
+    <div class="phones" id="phones"></div>
+    <div class="strip" id="strip"></div>
+  </section>
+
+  <section class="sec" id="online">
+    <div class="head"><h2>Онлайн</h2><p class="lead">Шаблоны постов собраны из трёх деталей: цвет раздела, один герой или чубчик, одна мысль. Факты в примерах взяты с сайта Mojo.</p></div>
+    <div class="posts" id="posts"></div>
+    <h3 class="sub">Сторис и рассылка</h3>
+    <div class="posts posts--s" id="stories"></div>
+    <h3 class="sub">Стикерпак для мессенджеров</h3>
+    <ul class="stk" id="stk"></ul>
+  </section>
+
+  <section class="sec" id="voice">
+    <div class="head"><h2>Голос</h2><p class="lead">Ojo по-испански «глаз», и у героя их два. Отсюда весь словарь бренда: смотреть, видеть, присматривать. Фразы ниже — мои предложения для мерча и рекламы.</p></div>
+    <ul class="voice">
+      <li><h3>Спокойно</h3><p>Mojo снимает суету, поэтому не кричит. Без восклицательных знаков и слова «революция».</p></li>
+      <li><h3>С прищуром</h3><p>Лёгкая игра слов вокруг глаз и взгляда. Одна шутка на носитель, не больше.</p></li>
+      <li><h3>По делу</h3><p>Школьному руководителю важны время учителей и спокойствие родителей. Каждая фраза про одно из двух.</p></li>
+    </ul>
+    <ul class="wall" id="wall"></ul>
+  </section>
+
+  <section class="sec" id="merch">
+    <div class="head"><h2>Мерч</h2><p class="lead">Главная механика: липучка. На худи и анораке есть площадка, на неё крепится патч со своим героем. Учитель берёт кошку, директор льва, и вещь становится личной.</p></div>
+    <div class="merch" id="merch_grid"></div>
+  </section>
+
+  <section class="sec" id="forum">
+    <div class="head"><h2>Сценарий: деловой форум</h2><p class="lead">Стенд на большом экономическом или образовательном форуме, например на петербургском. Задача: чтобы владелец школы заметил стенд с другого конца зала и ушёл с вещью, которую захочется оставить.</p></div>
+    <div class="scene" id="scene"></div>
+    <h3 class="sub">Что происходит на стенде</h3>
+    <ul class="acts">
+      <li><i>1</i><h3>Глаза следят за вами</h3><p>На большом экране только два кольца и зрачки. Камера ловит проходящих, зрачки поворачиваются за ними. Это та же механика, что в логотипе на сайте.</p></li>
+      <li><i>2</i><h3>Фотозона «Посмотри как Mojo»</h3><p>Два кольца в человеческий рост с чубчиком сверху. Гость встаёт за кольцо и сам становится зрачком.</p></li>
+      <li><i>3</i><h3>Выбери своего героя</h3><p>На стойке лежат патчи на липучке. Гость называет роль и получает героя на бейдж: льва, кошку, сову.</p></li>
+      <li><i>4</i><h3>Демо за пять минут</h3><p>Короткий показ на стойке. В конце гость сканирует код и получает месяц бесплатного доступа после полного демо.</p></li>
+    </ul>
+    <h3 class="sub">Презентация</h3>
+    <div class="slides" id="slides"></div>
+    <h3 class="sub">Набор гостя и команды</h3>
+    <div class="merch merch--kit" id="kit"></div>
+  </section>
+
+  <section class="next">
+    <h2>С чего начать</h2>
+    <ol>
+      <li>Состояния в продукте и стикерпак: дёшево, быстро, видно каждый день.</li>
+      <li>Шаблоны постов: шесть форматов закрывают почти всю ленту.</li>
+      <li>Патчи и брелок: маленький тираж, проверка, какие герои нравятся людям.</li>
+      <li>Худи, анорак и стенд: после того как система обкатана на первых трёх шагах.</li>
+    </ol>
+    <p class="cap" style="color:#9fb0ab">Это схемы, а не фотореалистичные мокапы: вещи и стенд нарисованы плоско, чтобы показать идею и место героя. Для портфолио их стоит переснять на настоящих мокапах.</p>
+  </section>
+  <footer>Концепт для портфолио. Не является официальным материалом Mojo. Имена, цифры баллов и тексты уведомлений в макетах условные.</footer>
+</div>
+
+<script>
+(function(){
+  var TOP={
+    orig:"M78,116 C80,88 100,60 121,58 C140,56 136,78 134,88 C131,104 148,104 152,88 C156,70 160,52 177,52 C190,52 196,78 215,116",
+    curl:"M78,116 C78,70 120,50 150,60 C176,70 170,96 152,94 C138,92 140,74 156,72 C186,68 214,86 215,116",
+    wave:"M78,116 C84,56 112,56 124,82 C136,106 164,106 176,82 C188,56 212,56 215,116",
+    bolt:"M78,116 L96,56 L124,96 L150,46 L176,96 L204,56 L215,116",
+    heart:"M78,116 C86,104 120,108 150,104 C120,80 118,48 138,48 C148,48 150,58 150,64 C150,58 152,48 162,48 C182,48 180,80 150,104 C180,108 208,104 215,116",
+    cap:"M78,116 V94 H222 V116 M96,74 L150,54 L204,74 L150,94 Z M204,74 V100",
+    crown:"M78,116 L70,60 L110,90 L150,46 L190,90 L230,60 L222,116",
+    bulb:"M78,116 C84,98 120,104 138,100 C118,84 122,48 150,48 C178,48 182,84 162,100 C180,104 208,98 215,116",
+    check:"M78,116 L96,82 L130,104 L204,44 L215,116",
+    tangle:"M78,116 C60,50 150,30 140,80 C132,120 100,60 150,58 C200,56 160,120 180,84 C196,56 230,70 215,116",
+    none:"",
+    rabbit:"M78,116 C70,70 84,28 100,30 C116,32 118,84 124,100 C130,114 170,114 176,100 C182,84 184,32 200,30 C216,28 230,70 222,116",
+    hare:"M78,116 C70,70 84,28 100,30 C116,32 118,84 124,100 C130,114 170,114 176,100 C180,84 182,44 200,44 C218,44 240,56 250,74 C232,66 218,70 214,84 C216,96 220,106 222,116",
+    cat:"M70,120 L80,60 L116,96 Q150,84 184,96 L220,60 L230,120",
+    lion:"M62,128 C40,100 60,78 80,84 C78,58 108,48 122,66 C134,44 166,44 178,66 C192,48 222,58 220,84 C240,78 260,100 238,128",
+    bear:"M66,124 C44,112 44,76 68,76 C84,76 90,90 96,98 Q150,74 204,98 C210,90 216,76 232,76 C256,76 256,112 234,124",
+    owl:"M60,126 L64,66 L110,104 L150,120 L190,104 L236,66 L240,126",
+    fox:"M64,122 L50,40 L112,98 Q150,90 188,98 L250,40 L236,122",
+    hedgehog:"M62,126 L70,84 L88,104 L100,64 L122,92 L138,54 L150,88 L166,56 L180,92 L202,66 L212,104 L230,84 L238,126",
+    mouse:"M64,124 C30,110 30,54 66,54 C92,54 102,82 104,100 Q150,86 196,100 C198,82 208,54 234,54 C270,54 270,110 236,124"
+  };
+  var FAM={lion:"#b98658",cat:"#e3975f",rabbit:"#8f6ad8",hare:"#3ba995",owl:"#3a78d4",fox:"#dd6b3c",bear:"#7b5b47",hedgehog:"#5d6b66",mouse:"#8e9cb3"};
+  function eye(x,y,k){
+    if(k==="happy")return '<path d="M'+(x-30)+','+(y+8)+' A30,30 0 0 1 '+(x+30)+','+(y+8)+'"/>';
+    if(k==="sleep")return '<path d="M'+(x-30)+','+(y-6)+' A30,30 0 0 0 '+(x+30)+','+(y-6)+'"/>';
+    var r='<circle cx="'+x+'" cy="'+y+'" r="30"/>';
+    if(k==="ring")return r;
+    if(k==="wow")return r+'<circle class="fill" cx="'+x+'" cy="'+y+'" r="4.5"/>';
+    if(k==="heart")return r+'<path class="fill" d="M'+x+','+(y+9)+' C'+(x-15)+','+(y-2)+' '+(x-7)+','+(y-13)+' '+x+','+(y-5)+' C'+(x+7)+','+(y-13)+' '+(x+15)+','+(y-2)+' '+x+','+(y+9)+' Z"/>';
+    if(k==="dizzy")return r+'<path class="thin" d="M'+(x-8)+','+(y-8)+' l16,16 M'+(x+8)+','+(y-8)+' l-16,16"/>';
+    return r+'<g class="pg"><circle class="fill pupil" cx="'+x+'" cy="'+y+'" r="6.6"/></g>';
+  }
+  function inner(o){
+    var e=o.eyes||"open",el=e.pop?e[0]:e,er=e.pop?e[1]:e,top=TOP[o.top||"orig"],s="";
+    if(o.m)s+='<path d="M-33,181 V122 L-4,166 L25,122 V181"/>';
+    if(top)s+='<path d="'+top+'"/>';
+    if(o.top==="bulb")s+='<path class="thin" d="M150,34 V24 M118,46 L110,38 M182,46 L190,38"/>';
+    s+=eye(84,150,el)+eye(216,150,er);
+    if(o.nose!==0)s+='<path d="M153,143 V178 C153,198 132,204 119,193"/>';
+    return s;
+  }
+  function look(o){var l=o.look||[.51,.86];return "--dx:"+l[0]+";--dy:"+l[1]}
+  function ojo(o){o=o||{};var vb=o.vb||(o.m?"-48 22 318 196":"14 20 272 196");
+    return '<svg class="oj ojo'+(o.fix?"":" track")+'" viewBox="'+vb+'" style="'+look(o)+'" aria-hidden="true">'+inner(o)+"</svg>"}
+  /* the same face placed inside another drawing: centre (cx,cy), scale s */
+  function g(o,cx,cy,s,col,rot){o=o||{};var mx=o.m?111:150;
+    return '<g class="oj'+(o.fix?"":" track")+'" style="color:'+(col||"currentColor")+";"+look(o)+'" transform="translate('+(cx-mx*s)+","+(cy-118*s)+") scale("+s+")"+(rot?" rotate("+rot+" "+mx+" 118)":"")+'">'+inner(o)+"</g>"}
+  function patch(k,cx,cy,r,rot){return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+FAM[k]+'"'+(rot===undefined?"":' stroke="#fff" stroke-width="'+(r*.14)+'"')+"/>"+g({top:k},cx,cy+r*.06,r/190,"#fff",rot||0)}
+  var $=function(id){return document.getElementById(id)};
+
+  /* ---------- product ---------- */
+  var tab='<div class="tabbar"><i class="on"></i><i></i><i></i><i></i></div>';
+  $("phones").innerHTML=[
+    ['<div class="phone__in" style="background:var(--grad);color:#fff;justify-content:center;gap:18px"><div style="padding:0 18px">'+ojo({m:1})+'</div><h4 style="text-align:center;color:var(--ink)">Welcome back, Alex</h4><span class="btnm" style="background:var(--ink)">Log in</span></div>',"Вход","Заставка и экран входа: логотип смотрит на кнопку."],
+    ['<div class="phone__in"><div style="display:flex;justify-content:space-between;align-items:flex-end;gap:6px"><div><small>Tuesday, 6 October</small><h4>Good morning, Alex</h4></div><div style="width:64px;color:var(--mint-deep)">'+ojo({})+'</div></div><div class="row"><span><b>Biology</b><br><small>08:00, room 12</small></span><span class="pill">now</span></div><div class="row"><span><b>Algebra</b><br><small>08:50, room 4</small></span></div><div class="row"><span><b>Literature</b><br><small>09:50, room 21</small></span></div><div class="row" style="background:var(--lilac)"><span><b>Homework</b><br><small>2 tasks due tomorrow</small></span><span style="width:40px;color:#6a55d6">'+ojo({top:"rabbit"})+"</span></div></div>"+tab,"Главный экран","Оджо здоровается, зайчонок помечает блок ученика."],
+    ['<div class="phone__in" style="justify-content:center;align-items:center;text-align:center;gap:12px"><div style="width:150px;color:var(--mint-deep)">'+ojo({top:"curl",eyes:"sleep",fix:1})+'</div><h4>No homework for today</h4><small>Enjoy your evening. New tasks will appear here.</small></div>'+tab,"Пустое состояние","Герой спит: значит, всё сделано."],
+    ['<div class="phone__in" style="background:var(--butter);justify-content:center;align-items:center;text-align:center;gap:12px"><div style="width:160px;color:#c98a16">'+ojo({top:"crown",eyes:"happy",fix:1})+'</div><h4>+5 Mojo Points</h4><small>For helping a classmate in Biology</small><span class="btnm" style="padding-inline:26px">See my points</span></div>',"Награда","Mojo Points: радость и корона."],
+    ['<div class="phone__in" style="justify-content:center;align-items:center;text-align:center;gap:12px"><div style="width:150px;color:#b5503f">'+ojo({top:"tangle",eyes:"dizzy",fix:1})+'</div><h4>Something went wrong</h4><small>The timetable did not load. Check your connection and try again.</small><span class="btnm" style="padding-inline:26px">Try again</span></div>',"Ошибка","Линия запуталась, текст говорит, что делать."]
+  ].map(function(p){return '<div class="fig"><div class="phone">'+p[0]+'</div><div class="cap"><b>'+p[1]+"</b>"+p[2]+"</div></div>"}).join("");
+  $("strip").innerHTML=[
+    [{top:"heart"},"Pick-up request","Victoria’s mum will be at reception in 20 minutes."],
+    [{top:"bolt",look:[0,-1]},"Mojo AI","Your lesson plan for Biology, class 7B is ready."],
+    [{top:"check",eyes:"happy",fix:1},"Grades saved","Class 7B, Biology, period I."]
+  ].map(function(n){return '<div class="push"><div>'+ojo(n[0])+"</div><span><b>"+n[1]+"</b>"+n[2]+"</span></div>"}).join("");
+
+  /* ---------- social ---------- */
+  var mk=function(c){return '<div class="mk" style="color:'+c+'">'+ojo({m:1,fix:1})+"</div>"};
+  function post(bg,fg,body,st){return '<div class="sp'+(st?" sp--st":"")+'" style="background:'+bg+";color:"+fg+'">'+body+"</div>"}
+  $("posts").innerHTML=[
+    post("var(--grad)","#fff",mk("#fff")+'<div style="margin:0 -34% -6% -34%">'+ojo({top:"none",nose:0,vb:"40 100 220 100"})+'</div><div class="sp__t" style="color:var(--ink)">Eyes on what matters.</div>'),
+    post("var(--lilac)","var(--ink)",mk("#6a55d6")+'<div><div class="sp__s">New in Mojo AI</div><div class="sp__t">Voice notes become ready-to-use report comments</div></div><div class="sp__art" style="color:#6a55d6">'+ojo({top:"bolt"})+"</div>"),
+    post("var(--ink)","#fff",mk("#9fe0d2")+'<div><div class="sp__big">50,000+</div><div class="sp__s">people use Mojo every day, in 11 countries</div></div><div class="avrow">'+["lion","cat","rabbit","hare","owl","fox"].map(function(k){return '<span style="background:'+FAM[k]+'">'+ojo({top:k,fix:1})+"</span>"}).join("")+"</div>"),
+    post(FAM.lion,"#fff",mk("#fff")+'<div class="sp__t">“I manage all processes from a single interface.”</div><div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px"><div class="sp__s">Head of school</div><div style="width:46%">'+ojo({top:"lion"})+"</div></div>"),
+    post("var(--butter)","var(--ink)",mk("#c98a16")+'<div><div class="sp__s">Tip</div><div class="sp__t">You can start with just one division of the school</div></div><div class="sp__art" style="color:#c98a16">'+ojo({top:"bulb",look:[0,-1]})+"</div>"),
+    post("var(--rose)","var(--ink)",mk("#b5503f")+'<div class="sp__t">Thank you, teachers.</div><div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px"><div class="sp__s">World Teachers’ Day<br>5 October</div><div style="width:50%;color:#b5503f">'+ojo({top:"heart",eyes:"heart",fix:1})+"</div></div>")
+  ].join("");
+  $("stories").innerHTML=[
+    post("var(--mint-deep)","#fff",mk("#fff")+'<div><div class="sp__s">What’s new</div><div class="sp__t" style="font-size:30px">All Summer 2026 Updates in Mojo</div></div><div style="display:grid;gap:8px">'+["6 new modules","6 updated tools","4 mobile app updates"].map(function(t){return '<div style="background:rgba(255,255,255,.14);border-radius:14px;padding:10px 14px;font-weight:600;font-size:15px">'+t+"</div>"}).join("")+'</div><div style="width:56%;align-self:center">'+ojo({eyes:"wow",fix:1})+"</div>",1),
+    post("var(--grad)","var(--ink)",mk("#fff")+'<div class="sp__t" style="font-size:30px">Meet us at the forum.<br>Find us by the big eyes.</div><div style="margin:0 -40% 0 -40%;color:#fff">'+ojo({top:"none",nose:0,vb:"40 100 220 100"})+'</div><div class="sp__s">One month of free access after the demo</div>',1),
+    '<div class="mail"><div class="mail__top"><b>What’s new in Mojo this month</b><div>'+ojo({top:"wave"})+'</div></div><div class="mail__body"><b style="color:var(--ink);font:600 16px var(--display)">Hello, Anna</b><i></i><i style="width:86%"></i><i style="width:64%"></i><span class="btnm" style="justify-self:start;padding-inline:22px;margin-top:6px">Read the updates</span></div></div><p class="cap" style="padding:10px 6px 0"><b>Шапка рассылки</b>Волна вместо чубчика: спокойный регулярный формат.</p>'
+  ].map(function(x,i){return i<2?x:"<div>"+x+"</div>"}).join("");
+  $("stk").innerHTML=[[{},"Вижу!"],[{top:"check",eyes:"happy",fix:1},"Сохранено"],[{eyes:"wow",fix:1},"Ого"],[{look:[0,-1],top:"bulb",fix:1},"Думаю"],[{eyes:"heart",top:"heart",fix:1},"Спасибо"],[{eyes:"sleep",top:"curl",fix:1},"Каникулы"],[{top:"crown",eyes:"happy",fix:1},"Пять с плюсом"],[{eyes:["open","happy"],look:[.2,.2],fix:1},"Смотрю в оба"],[{top:"tangle",eyes:"dizzy",fix:1},"Понедельник"],[{top:"cap"},"На уроке"]]
+    .map(function(s){return "<li>"+ojo(s[0])+"<span>"+s[1]+"</span></li>"}).join("");
+
+  /* ---------- voice ---------- */
+  $("wall").innerHTML=[["Eyes on what matters","главная строка бренда"],["Смотрю в оба","худи, стикер, патч"],["Всё под присмотром","шопер, стенд"],["I see progress","значок для учителей"],["Смотрим в одну сторону","школа и родители, партнёрства"],["Less paperwork, more teaching","реклама для учителей"],["Вижу прогресс","Mojo Points, дневник ученика"],["One place for the whole school","сайт, презентация"],["Глаз да глаз","блокнот завуча"],["Keep an eye on learning","аналитика"]]
+    .map(function(w){return "<li>"+w[0]+"<small>"+w[1]+"</small></li>"}).join("");
+
+  /* ---------- merch ---------- */
+  var S='<svg class="gar" viewBox="0 0 300 300" role="img" aria-label="';
+  var body="M104,62 C110,30 190,30 196,62 L252,92 L284,196 L246,208 L228,150 L228,276 L72,276 L72,150 L54,208 L16,196 L48,92 Z";
+  function hoodie(bg,c,extra,label){return S+label+'"><rect width="300" height="300" fill="'+bg+'"/><path fill="'+c+'" d="'+body+'"/><path fill="rgba(0,0,0,.16)" d="M104,62 C122,86 178,86 196,62 C186,98 114,98 104,62 Z"/><path stroke="rgba(0,0,0,.18)" stroke-width="3" fill="none" stroke-linecap="round" d="M108,214 H192 L200,258 H100 Z M139,88 V128 M161,88 V128"/>'+extra+"</svg>"}
+  var velcro=function(x,y,w,h){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="8" fill="rgba(255,255,255,.16)" stroke="rgba(255,255,255,.5)" stroke-width="1.5" stroke-dasharray="3 4"/>'};
+  function item(svg,name,text,wide){return '<div class="m'+(wide?" m--wide":"")+'">'+svg+'<div class="cap"><b>'+name+"</b>"+text+"</div></div>"}
+  var merch=[
+    item(hoodie("#dcefeb","#23766a",g({},112,132,.2,"#fff")+velcro(162,112,56,46)+patch("cat",190,135,18)+'<text x="150" y="196" font-size="11" fill="#fff" text-anchor="middle" opacity=".9">eyes on what matters</text>',"Худи спереди"),"Худи, перед","Вышитый Оджо слева, справа площадка-липучка под патч с героем."),
+    item(hoodie("#ece6fb","#1c2927",g({top:"none",nose:0},150,146,.6,"#57c9b4")+'<text x="150" y="200" font-size="17" fill="#fff" text-anchor="middle">Смотрю в оба</text>',"Худи со спины"),"Худи, спина","Крупные глаза во всю спину и одна фраза."),
+    item(S+'Анорак"><rect width="300" height="300" fill="#fbf0d6"/><path fill="#efe6d8" d="'+body+'"/><path fill="#23766a" d="M48,92 L104,62 C110,30 190,30 196,62 L252,92 L262.5,126 L37.5,126 Z"/><path fill="rgba(0,0,0,.18)" d="M104,62 C122,86 178,86 196,62 C186,98 114,98 104,62 Z"/><path stroke="#1c2927" stroke-width="3" stroke-linecap="round" d="M150,92 V168"/><rect x="96" y="176" width="108" height="66" rx="10" fill="#e3d8c6"/><path d="M96,186 Q150,206 204,186" stroke="rgba(0,0,0,.2)" stroke-width="2.5" fill="none"/>'+patch("lion",122,222,15)+patch("owl",150,224,15)+patch("fox",178,222,15)+g({},196,108,.12,"#fff")+"</svg>","Анорак","Карман-кенгуру с липучкой: сюда встают сразу три героя. Маленький Оджо на кокетке."),
+    item(S+'Патчи на липучке"><rect width="300" height="300" fill="#f2ede8"/>'+[["lion",64,78],["cat",150,78],["rabbit",236,78],["hare",64,160],["owl",150,160],["fox",236,160],["bear",64,242],["hedgehog",150,242],["mouse",236,242]].map(function(p){return patch(p[0],p[1],p[2],34,0)}).join("")+"</svg>","Патчи","Девять героев. Вышивка, белый кант, липучка на обороте."),
+    item(S+'Брелок"><rect width="300" height="300" fill="#e5ebfd"/><circle cx="150" cy="40" r="18" fill="none" stroke="#9aa8a3" stroke-width="5"/><path d="M150,58 V86" stroke="#9aa8a3" stroke-width="5" stroke-linecap="round"/>'+g({top:"orig",eyes:"ring",fix:1},150,150,.62,"#23766a")+'<g fill="none" stroke="#9aa8a3" stroke-width="6" stroke-linecap="round"><circle cx="109" cy="200" r="11"/><path d="M109,211 V266 M109,248 H122 M109,260 H119"/><circle cx="191" cy="200" r="11"/><path d="M191,211 V252 M191,236 H203"/></g></svg>',"Брелок","Глаза — настоящие кольца для ключей. Литой металл с мятной эмалью."),
+    item(S+'Шопер"><rect width="300" height="300" fill="#dcefeb"/><path d="M110,112 C110,40 190,40 190,112" fill="none" stroke="#1c2927" stroke-width="9" stroke-linecap="round"/><rect x="66" y="108" width="168" height="170" rx="8" fill="#fbf7ef"/>'+g({},150,178,.42,"#23766a")+'<text x="150" y="252" font-size="15" fill="#1c2927" text-anchor="middle">Всё под присмотром</text></svg>',"Шопер","Небелёный хлопок, печать в один цвет."),
+    item(S+'Лист стикеров"><rect width="300" height="300" fill="#ece6fb"/><rect x="34" y="28" width="232" height="244" rx="16" fill="#fff"/>'+patch("rabbit",86,84,30,-10)+patch("hare",170,78,26,8)+patch("bear",232,128,24,-6)+'<g transform="rotate(-6 110 168)"><rect x="52" y="148" width="124" height="38" rx="19" fill="#23766a"/><text x="114" y="173" font-size="15" fill="#fff" text-anchor="middle">Смотрю в оба</text></g>'+g({top:"heart",eyes:"heart",fix:1},210,214,.24,"#b5503f",6)+g({top:"check",eyes:"happy",fix:1},92,228,.24,"#23766a",-8)+"</svg>","Стикеры","Лист в каждый заказ и в каждый набор для новой школы."),
+    item(S+'Блокнот и кружка"><rect width="300" height="300" fill="#f8e6e2"/><rect x="34" y="50" width="118" height="200" rx="10" fill="#1c2927"/><path d="M132,50 V250" stroke="#3fb8a2" stroke-width="5"/>'+g({top:"none",nose:0},90,236,.36,"#57c9b4")+'<text x="48" y="84" font-size="13" fill="#fff">Глаз да глаз</text><path d="M252,132 C290,132 290,196 252,196" fill="none" stroke="#fff" stroke-width="12"/><rect x="176" y="104" width="80" height="118" rx="12" fill="#fff"/>'+g({},216,160,.22,"#23766a")+"</svg>","Блокнот и кружка","В блокноте глаза выглядывают из-за нижнего края обложки."),
+    item(S+'Значки"><rect width="300" height="300" fill="#fbf0d6"/>'+[[90,110,"#23766a",{}],[210,110,"#fff",{top:"crown",eyes:"happy",fix:1}],[150,206,"#1c2927",{top:"bolt"}]].map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="52" fill="'+p[2]+'" stroke="#d9b45a" stroke-width="5"/>'+g(p[3],p[0],p[1]+4,.27,p[2]==="#fff"?"#c98a16":"#fff")}).join("")+"</svg>","Значки","Эмаль с золотым кантом. Корона достаётся школам-клиентам на годовщину.")
+  ];
+  $("merch_grid").innerHTML=merch.join("");
+
+  /* ---------- forum ---------- */
+  function person(x,y,c){return '<g fill="'+c+'"><circle cx="'+x+'" cy="'+(y-112)+'" r="17"/><path d="M'+(x-22)+","+y+" V"+(y-66)+" C"+(x-22)+","+(y-98)+" "+(x+22)+","+(y-98)+" "+(x+22)+","+(y-66)+" V"+y+' Z"/></g>'}
+  $("scene").innerHTML='<svg viewBox="0 0 1200 540" role="img" aria-label="Схема стенда Mojo на форуме: задняя стена с логотипом, стойка, экран с глазами, колонна героев и фотозона"><defs><linearGradient id="wg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#aee1db"/><stop offset=".52" stop-color="#6fcbb9"/><stop offset="1" stop-color="#3ebda8"/></linearGradient></defs>'
+    +'<rect width="1200" height="540" fill="#eef1ee"/><path d="M0,430 H1200 V540 H0 Z" fill="#e0e6e2"/>'
+    +'<rect x="250" y="52" width="560" height="40" rx="8" fill="#1c2927"/><text x="530" y="79" font-size="19" fill="#fff" text-anchor="middle">mojo.education</text>'
+    +'<rect x="262" y="92" width="536" height="340" fill="url(#wg)"/>'+g({m:1},530,196,.98,"#fff")+'<text x="530" y="330" font-size="32" fill="#1c2927" text-anchor="middle">Eyes on what matters</text>'
+    +'<rect x="110" y="110" width="116" height="322" rx="10" fill="#fff"/>'+patch("lion",168,166,38)+patch("cat",168,254,38)+patch("owl",168,342,38)+'<text x="168" y="414" font-size="14" fill="#1c2927" text-anchor="middle">Pick your hero</text>'
+    +'<rect x="300" y="366" width="200" height="88" rx="12" fill="#fff"/>'+g({},400,410,.18,"#23766a")
+    +'<rect x="655" y="440" width="10" height="16" fill="#1c2927"/><rect x="560" y="352" width="200" height="92" rx="12" fill="#1c2927"/>'+g({top:"none",nose:0},660,406,.42,"#57c9b4")
+    +person(528,474,"#9aa8a3")+person(262,474,"#b9c4c0")
+    +'<path d="M938,372 V452 M1098,372 V452" stroke="#23766a" stroke-width="16" stroke-linecap="round"/>'+person(1098,452,"#9aa8a3")+g({eyes:"ring",fix:1},1018,262,1.22,"#23766a")
+    +'<text x="1018" y="498" font-size="15" fill="#56645f" text-anchor="middle">Фотозона: встань в кольцо</text><text x="660" y="498" font-size="15" fill="#56645f" text-anchor="middle">Экран: глаза следят за гостем</text><text x="400" y="498" font-size="15" fill="#56645f" text-anchor="middle">Стойка: демо за пять минут</text><text x="168" y="498" font-size="15" fill="#56645f" text-anchor="middle">Колонна героев</text></svg>';
+  $("slides").innerHTML=[
+    '<div class="sl" style="background:var(--grad);color:var(--ink)"><div style="width:30%;color:#fff">'+ojo({m:1})+'</div><b>Mojo — school management system</b><small>Streamlining school operations so educators can focus on teaching and student growth</small></div>',
+    '<div class="sl" style="background:#fff"><small>Schools that trust Mojo</small><div><div class="sl__n">50,000+</div><b style="font-size:18px">users every day, in 11 countries</b></div><svg viewBox="70 44 152 80" style="width:34%;color:var(--mint)" class="oj" aria-hidden="true"><path stroke-width="9" d="'+TOP.orig+'"/></svg></div>',
+    '<div class="sl" style="background:var(--ink);color:#fff"><div style="width:22%;color:#57c9b4">'+ojo({eyes:"happy",top:"check",fix:1})+'</div><b>One month of free access after the demo</b><div style="display:flex;justify-content:space-between;align-items:flex-end"><small>Scan to book a demo</small><span class="qr">QR</span></div></div>'
+  ].join("");
+  $("kit").innerHTML=[
+    item(S+'Бейдж"><rect width="300" height="300" fill="#e5ebfd"/><path d="M118,0 L140,96 M182,0 L160,96" stroke="#23766a" stroke-width="13"/><rect x="134" y="88" width="32" height="16" rx="5" fill="#9aa8a3"/><rect x="72" y="100" width="156" height="184" rx="14" fill="#fff"/>'+g({m:1,fix:1},150,134,.2,"#23766a")+patch("lion",150,196,28)+'<text x="150" y="250" font-size="17" fill="#1c2927" text-anchor="middle">Имя Фамилия</text><text x="150" y="270" font-size="12" fill="#56645f" text-anchor="middle" font-weight="400">School leader</text></svg>',"Бейдж","Лента в мятном, на карточке место под патч с ролью гостя."),
+    item(S+'Футболка команды"><rect width="300" height="300" fill="#dcefeb"/><path fill="#fff" d="M108,56 C124,76 176,76 192,56 L262,86 L284,150 L242,166 L230,132 L230,270 L70,270 L70,132 L58,166 L16,150 L38,86 Z"/><path fill="none" stroke="rgba(0,0,0,.12)" stroke-width="3" d="M108,56 C124,76 176,76 192,56"/>'+g({},150,150,.4,"#23766a")+'<text x="150" y="226" font-size="14" fill="#1c2927" text-anchor="middle">Ask me about Mojo</text></svg>',"Футболка команды","Белая, чтобы команда читалась на мятном стенде."),
+    item(S+'Ролл-ап"><rect width="300" height="300" fill="#f2ede8"/><rect x="92" y="18" width="116" height="252" rx="6" fill="#23766a"/><rect x="82" y="268" width="136" height="12" rx="6" fill="#1c2927"/>'+g({top:"none",nose:0},150,96,.34,"#57c9b4")+'<text x="150" y="164" font-size="15" fill="#fff" text-anchor="middle">All school</text><text x="150" y="184" font-size="15" fill="#fff" text-anchor="middle">processes</text><text x="150" y="204" font-size="15" fill="#fff" text-anchor="middle">in one place</text>'+g({m:1,fix:1},150,240,.14,"#fff")+"</svg>","Ролл-ап","Для сессий и выездных встреч, когда стенда нет."),
+    item(S+'Набор гостя"><rect width="300" height="300" fill="#fbf0d6"/><rect x="40" y="70" width="220" height="180" rx="16" fill="#fff"/><rect x="40" y="70" width="220" height="44" rx="16" fill="#23766a"/>'+g({m:1,fix:1},150,92,.14,"#fff")+patch("cat",92,166,24,-8)+g({eyes:"ring",fix:1},168,170,.26,"#23766a")+'<rect x="208" y="136" width="34" height="62" rx="5" fill="#1c2927"/><rect x="62" y="206" width="176" height="26" rx="13" fill="#dcefeb"/><text x="150" y="224" font-size="12" fill="#23766a" text-anchor="middle">1 month of free access</text></svg>',"Набор гостя","Коробка: патч, брелок, блокнот и карточка с месяцем бесплатного доступа.")
+  ].join("");
+
+  /* eyes follow the pointer: one shared angle per face */
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
+    var raf=0,px=0,py=0,list=[].slice.call(document.querySelectorAll(".track"));
+    addEventListener("pointermove",function(e){if(e.pointerType==="touch")return;px=e.clientX;py=e.clientY;if(!raf)raf=requestAnimationFrame(look2)},{passive:true});
+    function look2(){raf=0;list.forEach(function(s){var r=s.getBoundingClientRect();if(r.bottom<-100||r.top>innerHeight+100)return;
+      var a=Math.atan2(py-(r.top+r.height*.62),px-(r.left+r.width/2));s.style.setProperty("--dx",Math.cos(a).toFixed(3));s.style.setProperty("--dy",Math.sin(a).toFixed(3))})}
+  }
+})();
+</script>

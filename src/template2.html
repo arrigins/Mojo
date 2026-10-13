@@ -1,0 +1,614 @@
+<title>Mojo Redesign Concept</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@400..700&family=Onest:wght@400..600&display=swap">
+<style>
+/* Layout: left-aligned editorial headings on a 1240px grid; soft monoline-round shapes taken from the logo;
+   one loud thing (the logo's eyes follow the cursor), everything else quiet. Single light theme by choice. */
+:root{
+  --paper:#f6f5f1; --white:#ffffff;
+  --ink:#1c2927; --ink-2:#56645f; --line:#e2e7e3;
+  --mint:#3fb8a2; --mint-deep:#23766a; --mint-wash:#dcefeb;
+  --sand:#f2ede8; --peri:#e5ebfd; --lilac:#ece6fb; --butter:#fbf0d6; --rose:#f8e6e2;
+  --brown:#a9795a; --blue:#3a78d4; --violet:#6a55d6; --sun:#efb648;
+  --emerald:#17594f; --emerald-2:#2a8777;
+  --soft-grad:radial-gradient(70% 90% at 92% 8%,#bfe7df 0%,transparent 62%),radial-gradient(60% 80% at 100% 100%,#d7e6f7 0%,transparent 60%),#eaf5f2;
+  --display:"Geologica","Onest",system-ui,sans-serif;
+  --body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-xl:40px; --r-lg:28px; --r-md:18px;
+  --gutter:clamp(16px,4vw,40px);
+  --logo:url("%%logo%%");
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,p,ul,ol,figure,blockquote{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:inherit}
+img,svg{display:block}
+button{font-family:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.025em;text-wrap:balance}
+h1{font-size:clamp(38px,5.4vw,68px);line-height:1.04;letter-spacing:-.035em}
+h2{font-size:clamp(30px,4vw,50px);line-height:1.08}
+h3{font-size:22px;line-height:1.2;letter-spacing:-.015em}
+.lead{font-size:clamp(17px,1.5vw,20px);color:var(--ink-2);max-width:56ch}
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:var(--gutter)}
+.band{padding-block:clamp(56px,8vw,112px)}
+.band--flush{padding-top:0}
+.head{display:grid;gap:16px;margin-bottom:clamp(28px,4vw,48px);max-width:820px}
+.i{width:1em;height:1em;flex:none}
+:focus-visible{outline:3px solid var(--violet);outline-offset:3px;border-radius:8px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:500 16px/1 var(--body);padding:16px 26px;border-radius:999px;border:1.5px solid transparent;text-decoration:none;cursor:pointer;transition:background .18s,color .18s,border-color .18s,box-shadow .18s,transform .18s}
+.btn--primary{background:var(--mint-deep);color:var(--white)}
+.btn--primary:hover{background:#1b5f55}
+.btn--ink{background:var(--ink);color:var(--white)}
+.btn--ink:hover{background:var(--mint-deep)}
+.btn--ghost{border-color:color-mix(in srgb,var(--ink) 20%,transparent);color:var(--ink);background:transparent}
+.btn--ghost:hover{background:var(--white);border-color:var(--white);box-shadow:0 10px 24px -12px rgba(28,74,66,.45)}
+.btn--ghost:hover .play{background:var(--mint-deep)}
+.btn--sm{padding:12px 20px;font-size:15px}
+.btn--lg{padding:19px 34px;font-size:17px}
+.play{width:24px;height:24px;border-radius:50%;background:var(--ink);display:grid;place-items:center;flex:none;transition:background .18s}
+.play::after{content:"";border-left:7px solid var(--white);border-block:4.5px solid transparent;margin-left:2px}
+
+/* logo with live eyes: both pupils always share one angle and stay on the rim */
+.logo{position:relative;display:block;width:var(--w,116px);aspect-ratio:1165/666;container-type:inline-size;color:var(--mint-deep);flex:none}
+.logo__ink{position:absolute;inset:0;background:currentColor;-webkit-mask:var(--logo) center/100% 100% no-repeat;mask:var(--logo) center/100% 100% no-repeat}
+.pupil{position:absolute;top:63.44%;width:4.5%;aspect-ratio:1;border-radius:50%;background:currentColor;
+  transform:translate(-50%,-50%) translate(calc(var(--dx,.512)*4.38cqw),calc(var(--dy,.859)*4.38cqw));transition:transform .16s ease-out}
+.pupil:nth-of-type(1){left:42.49%}
+.pupil:nth-of-type(2){left:86.95%}
+
+/* concept note + header */
+.note{background:var(--ink);color:#cfd8d5;font-size:13px;text-align:center;padding:8px var(--gutter)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.top__in{display:flex;align-items:center;gap:clamp(16px,3vw,44px);padding-block:14px}
+.nav{display:flex;gap:clamp(14px,2vw,30px);font-size:16px;margin-right:auto}
+.nav a{text-decoration:none;padding-block:6px;border-bottom:1.5px solid transparent;transition:border-color .18s}
+.nav a:hover{border-color:var(--mint-deep)}
+.lang{display:inline-flex;align-items:center;gap:6px;font:500 15px var(--body);background:none;border:0;color:var(--ink);cursor:pointer;padding:8px}
+@media (max-width:900px){.nav{display:none}.lang{margin-left:auto}}
+
+/* hero */
+.hero{background:var(--soft-grad);border-radius:var(--r-xl);padding:clamp(24px,4.4vw,64px);display:grid;gap:clamp(28px,4vw,48px)}
+.hero__main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);gap:clamp(28px,4vw,56px);align-items:center}
+.hero__copy{display:grid;gap:26px;justify-items:start}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px}
+.stage{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:clamp(14px,2vw,26px);align-items:center;min-width:0}
+.persona{display:grid;gap:16px;min-width:0}
+.persona__who{display:grid;grid-template-columns:76px minmax(0,1fr);gap:14px;align-items:center;min-height:86px}
+.persona__who img{width:76px;height:76px;border-radius:50%;box-shadow:0 0 0 3px var(--white),0 0 0 5px var(--mint)}
+.persona__who b{display:block;font:600 19px/1.2 var(--display);letter-spacing:-.015em}
+.persona__who q{display:block;font-size:15px;line-height:1.35;color:var(--ink-2);quotes:"\201C" "\201D";margin-top:3px}
+.persona__ui{aspect-ratio:518/470;display:grid;align-items:start}
+.persona__ui img{width:100%;border-radius:7% / 9%;box-shadow:0 26px 50px -28px rgba(28,74,66,.5)}
+.swap{transition:opacity .28s ease}
+.swap.out{opacity:0}
+.phone{width:100%;border-radius:15.5%/7.2%;box-shadow:0 30px 50px -20px rgba(20,50,45,.5)}
+.roletabs{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.roletabs button{font:500 13px var(--body);padding:7px 11px;border-radius:999px;border:1.5px solid color-mix(in srgb,var(--ink) 14%,transparent);background:transparent;color:var(--ink);cursor:pointer;transition:background .18s,border-color .18s,color .18s}
+.roletabs button:hover{background:var(--white);border-color:var(--white)}
+.roletabs button[aria-selected="true"]{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.usps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.usp{display:grid;grid-template-columns:48px minmax(0,1fr);gap:14px;align-items:center;background:color-mix(in srgb,var(--white) 72%,transparent);border-radius:20px;padding:14px 18px 14px 14px;font:500 16px/1.3 var(--body)}
+.usp span{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:var(--white);font-size:24px}
+@media (max-width:980px){.hero__main{grid-template-columns:1fr}.usps{grid-template-columns:1fr}}
+@media (max-width:520px){.stage{grid-template-columns:1fr}.phone{display:none}}
+
+/* trust */
+.trust__head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px 48px;align-items:end;margin-bottom:clamp(24px,3vw,40px)}
+.trust__facts{display:flex;flex-wrap:wrap;gap:10px 32px;margin-top:14px;font-size:15px;color:var(--ink-2)}
+.trust__facts b{display:block;font:600 30px/1.1 var(--display);letter-spacing:-.03em;color:var(--ink)}
+.marq{overflow:hidden;display:grid;gap:14px;-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.marq__row{display:flex;gap:14px;width:max-content;animation:slide 70s linear infinite}
+.marq__row--rev{animation-direction:reverse}
+.marq:hover .marq__row{animation-play-state:paused}
+.marq li{flex:none;width:196px;height:116px;background:var(--white);border-radius:22px;display:grid;place-items:center;padding:20px 26px}
+.marq img{max-width:100%;max-height:76px;width:auto;object-fit:contain}
+@keyframes slide{to{transform:translateX(-50%)}}
+@media (max-width:820px){.trust__head{grid-template-columns:1fr}.marq li{width:150px;height:92px}}
+@media (prefers-reduced-motion:reduce){.marq{overflow-x:auto}}
+
+/* roles: the open card grows, the others keep a title and one line */
+.roles{display:flex;gap:20px;align-items:stretch}
+.role{flex:1 1 0;min-width:0;border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:flex-grow .5s cubic-bezier(.3,.7,.2,1);text-align:left;border:0;padding:0;color:inherit;font:inherit}
+.role.on{flex-grow:2.5;cursor:default}
+.role img{width:100%;height:310px;object-fit:cover;object-position:left top}
+.role__body{padding:6px 28px 30px;display:grid;gap:16px;align-content:start;min-height:250px}
+.role__teaser{color:var(--ink-2);font-size:16px;line-height:1.4}
+.role ul{display:none;gap:12px}
+.role.on ul{display:grid}
+.role.on .role__teaser{display:none}
+.role li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;align-items:center;font-size:16.5px;line-height:1.35}
+.role li span{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--white);font-size:21px;background:var(--tone)}
+.role--sand{background:#f2ede8;--tone:var(--brown)}
+.role--peri{background:#e5ebfd;--tone:var(--blue)}
+.role--mint{background:#dbedea;--tone:var(--mint-deep)}
+@media (max-width:900px){.roles{flex-direction:column}.role,.role.on{flex:none;cursor:default}.role ul{display:grid}.role__teaser{display:none}.role__body{min-height:0}.role img{height:auto;aspect-ratio:1000/529;object-position:left top}}
+
+/* modules */
+.mods{background:var(--white);border-radius:var(--r-xl);padding:clamp(24px,4vw,56px)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:24px;scrollbar-width:thin}
+.tabs button{flex:none;font:500 15px var(--body);padding:12px 20px;border-radius:999px;border:0;background:var(--paper);color:var(--ink);cursor:pointer;white-space:nowrap;transition:background .18s,color .18s}
+.tabs button:hover{background:var(--mint-wash)}
+.tabs button span{color:var(--ink-2);margin-left:7px;font-variant-numeric:tabular-nums}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--white)}
+.tabs button[aria-selected="true"] span{color:#aab8b4}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px}
+.mod{position:relative;display:flex;flex-direction:column;gap:6px;min-height:206px;padding:18px 18px 20px;border-radius:24px;background:var(--tint);text-decoration:none;transition:transform .22s ease,box-shadow .22s ease}
+.mod__ic{width:56px;height:56px;border-radius:16px;background:var(--white);color:var(--tone);display:grid;place-items:center;font-size:28px;margin-bottom:auto}
+.mod__go{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--ink) 18%,transparent);display:grid;place-items:center;font-size:17px;transition:background .2s,color .2s,border-color .2s,transform .2s}
+.mod b{font:600 17px/1.2 var(--display);letter-spacing:-.015em;margin-top:22px}
+.mod small{font-size:14px;line-height:1.35;color:var(--ink-2)}
+.mod:hover{transform:translateY(-5px);box-shadow:0 22px 34px -22px rgba(28,41,39,.45)}
+.mod:hover .mod__go{background:var(--ink);border-color:var(--ink);color:var(--white);transform:rotate(45deg)}
+@media (max-width:560px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.mod{min-height:176px;padding:14px;border-radius:20px}.mod__ic{width:46px;height:46px;font-size:24px;border-radius:14px}.mod__go{top:14px;right:14px;width:30px;height:30px;font-size:15px}.mod b{font-size:15.5px}.mod small{font-size:13px}}
+.mods__foot{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between;margin-top:32px;padding-top:28px;border-top:1px solid var(--line);font-size:18px}
+
+/* video */
+.video{position:relative;display:block;border-radius:var(--r-xl);overflow:hidden;text-decoration:none;color:var(--ink);background:#e9f5f3;aspect-ratio:2.25/1;min-height:320px;width:100%}
+.video>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;transition:transform .6s ease}
+.video:hover>img{transform:scale(1.025)}
+.video::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#edf8f5 0%,rgba(237,248,245,.92) 34%,rgba(237,248,245,0) 64%)}
+.video__copy{z-index:2;position:absolute;left:clamp(24px,4.4vw,64px);top:clamp(24px,4.4vw,64px);max-width:min(480px,70%);display:grid;gap:12px}
+.video__copy p{color:var(--ink-2)}
+.video__label{z-index:2;position:absolute;left:clamp(24px,4.4vw,64px);bottom:clamp(24px,4.4vw,64px);display:flex;align-items:center;gap:14px;background:var(--white);border-radius:999px;padding:10px 26px 10px 10px;font:500 17px var(--body);box-shadow:0 12px 30px -12px rgba(20,50,45,.4);transition:transform .2s}
+.video:hover .video__label{transform:translateY(-3px)}
+.video__label .play{width:52px;height:52px;background:var(--mint-deep)}
+.video__label .play::after{border-left-width:14px;border-block-width:9px;margin-left:4px}
+
+/* app */
+.app{background:var(--white);border-radius:var(--r-xl);padding:clamp(24px,4.4vw,64px);display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,4vw,56px);align-items:center}
+.app__copy{display:grid;gap:18px;justify-items:start}
+.app__copy>img{width:120px}
+.app__devices{width:100%}
+.stores{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.store{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:var(--white);border-radius:14px;padding:10px 20px 10px 16px;text-decoration:none;font-size:22px;transition:background .18s,transform .18s}
+.store:hover{background:var(--mint-deep);transform:translateY(-2px)}
+.store small{display:block;font-size:11px;line-height:1.1;opacity:.75}
+.store b{display:block;font:600 16px/1.15 var(--display)}
+@media (max-width:900px){.app{grid-template-columns:1fr}}
+
+/* pricing */
+.price{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-radius:var(--r-xl);overflow:hidden;background:var(--white)}
+.price__main{padding:clamp(24px,4vw,48px);display:grid;gap:18px;align-content:start;justify-items:start}
+.price__side{padding:clamp(24px,4vw,48px);background:var(--mint-wash);display:grid;gap:18px;align-content:start}
+.sizes{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:20px;scrollbar-width:thin}
+.sizes button{flex:none;font:500 15px var(--body);padding:12px 20px;border-radius:999px;border:1.5px solid var(--line);background:var(--white);color:var(--ink);cursor:pointer;font-variant-numeric:tabular-nums;transition:background .18s,border-color .18s,color .18s}
+.sizes button:hover{border-color:var(--mint-deep)}
+.sizes button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--white)}
+.amount{font:600 clamp(48px,7vw,84px)/1 var(--display);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.amount small{font:400 17px var(--body);letter-spacing:0;color:var(--ink-2);margin-left:8px}
+.facts{display:grid;gap:6px;color:var(--ink-2);font-size:16px}
+.facts b{color:var(--ink);font-weight:600}
+.incl{display:grid;gap:2px}
+.incl li{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:12px;align-items:center;font-size:16.5px;padding-block:11px;border-bottom:1px solid color-mix(in srgb,var(--mint-deep) 16%,transparent)}
+.incl li:last-child{border-bottom:0}
+.incl .i{font-size:22px;color:var(--mint-deep);stroke-width:2.4}
+.incl li.off{color:#6d7d78}
+.incl li.off .i{color:#9fb0ab;stroke-width:1.75}
+.incl small{font-size:13px;color:#6d7d78;white-space:nowrap}
+.fine{font-size:14px;color:var(--ink-2)}
+@media (max-width:820px){.price{grid-template-columns:1fr}.incl li{grid-template-columns:26px minmax(0,1fr)}.incl small{grid-column:2;white-space:normal}}
+
+/* testimonials */
+.tm{background:var(--white);border-radius:var(--r-xl);padding:clamp(20px,3vw,40px);display:grid;gap:clamp(20px,3vw,36px)}
+.tm__main{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(20px,4vw,56px);align-items:start}
+.tm__photo{width:100%;aspect-ratio:5/4;object-fit:cover;border-radius:var(--r-lg);background:var(--sand)}
+.tm__text{display:grid;gap:18px;align-content:start;padding-top:4px}
+.tm__bar{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.tm__mark{font-size:40px;color:var(--mint)}
+.tm__nav{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.round{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--line);background:var(--white);color:var(--ink);display:grid;place-items:center;font-size:20px;cursor:pointer;transition:background .18s,color .18s,border-color .18s}
+.round:hover{background:var(--mint-deep);border-color:var(--mint-deep);color:var(--white)}
+.tm__lead{font:500 clamp(22px,2.5vw,32px)/1.22 var(--display);letter-spacing:-.022em;text-wrap:balance}
+.tm__rest{display:grid;gap:12px;color:var(--ink-2);font-size:16.5px;max-width:62ch}
+.tm__more{justify-self:start;background:none;border:0;padding:0;font:500 15px var(--body);color:var(--mint-deep);cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.tm__who b{display:block;font:600 18px/1.25 var(--display)}
+.tm__who span{font-size:15px;color:var(--ink-2)}
+.tm__pick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.tm__pick button{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;align-items:center;text-align:left;background:var(--paper);border:1.5px solid transparent;border-radius:18px;padding:10px 12px 10px 10px;cursor:pointer;color:var(--ink);transition:background .18s,border-color .18s}
+.tm__pick button:hover{background:var(--mint-wash)}
+.tm__pick button[aria-selected="true"]{background:var(--white);border-color:var(--mint-deep)}
+.tm__pick img{width:48px;height:48px;border-radius:50%;object-fit:cover}
+.tm__pick b{display:block;font:600 14px/1.2 var(--body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tm__pick small{display:block;font-size:12.5px;line-height:1.25;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:980px){.tm__pick{grid-template-columns:repeat(5,56px);justify-content:start}.tm__pick button{grid-template-columns:1fr;padding:3px;border-radius:50%}.tm__pick button span{display:none}}
+@media (max-width:760px){.tm__main{grid-template-columns:1fr}}
+
+/* rollout */
+.roll{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,80px);align-items:stretch}
+.roll__art{display:grid;align-content:space-between;justify-items:center;gap:32px}
+.roll__art img{width:min(100%,400px);mix-blend-mode:multiply}
+.steps{counter-reset:s;display:grid;align-content:start}
+.steps li{counter-increment:s;display:grid;grid-template-columns:52px minmax(0,1fr);gap:20px;padding-block:22px;border-top:1px solid var(--line)}
+.steps li:last-child{border-bottom:1px solid var(--line)}
+.steps li::before{content:counter(s);width:46px;height:46px;border-radius:50%;background:var(--mint-deep);display:grid;place-items:center;font:600 18px var(--display);color:var(--white)}
+.steps p{color:var(--ink-2);font-size:16px;margin-top:4px}
+.chip{display:inline-block;font:500 13px var(--body);background:var(--sun);border-radius:999px;padding:3px 10px;margin-left:8px;vertical-align:3px;letter-spacing:0}
+.ask{margin-top:clamp(28px,4vw,48px);background:var(--mint-wash);border-radius:var(--r-lg);padding:clamp(20px,3vw,32px) clamp(20px,3vw,40px);display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between}
+.ask p{font:500 clamp(18px,1.8vw,22px)/1.3 var(--display);letter-spacing:-.015em}
+@media (max-width:900px){.roll{grid-template-columns:1fr}.roll__art{grid-template-columns:1fr 1fr;align-items:center}.roll__art img{width:100%}}
+
+/* blog */
+.posts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.post{display:grid;gap:14px;text-decoration:none;align-content:start;background:var(--white);border-radius:var(--r-lg);padding:12px 12px 26px;transition:transform .25s ease,box-shadow .25s ease}
+.post:hover{transform:translateY(-8px);box-shadow:0 30px 44px -28px rgba(28,41,39,.5)}
+.post__cover{border-radius:20px;aspect-ratio:16/10;overflow:hidden}
+.post__cover svg{width:100%;height:100%;transition:transform .5s ease}
+.post:hover .post__cover svg{transform:scale(1.05)}
+.post>*:not(.post__cover){padding-inline:14px}
+.post time{font-size:14px;color:var(--ink-2);margin-top:6px}
+.post p{font-size:16px;color:var(--ink-2)}
+.post__go{display:inline-flex;align-items:center;gap:8px;font:500 15px var(--body);color:var(--mint-deep);margin-top:4px}
+.post__go .i{font-size:18px;transition:transform .2s}
+.post:hover .post__go .i{transform:translateX(5px)}
+.posts__all{display:flex;justify-content:center;margin-top:clamp(28px,4vw,44px)}
+@media (max-width:820px){.posts{grid-template-columns:1fr}}
+
+/* closing */
+.close{background:radial-gradient(60% 90% at 12% 0%,color-mix(in srgb,var(--mint) 55%,transparent) 0%,transparent 60%),linear-gradient(150deg,var(--emerald-2) 0%,var(--emerald) 70%);color:var(--white);border-radius:var(--r-xl);padding:clamp(24px,4.4vw,64px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);gap:clamp(28px,5vw,72px);align-items:center}
+.close__copy{display:grid;gap:22px}
+.close .logo{--w:min(100%,400px);color:var(--white);margin-bottom:8px}
+.close p{font-size:18px;max-width:38ch;opacity:.88}
+.form{background:var(--white);color:var(--ink);border-radius:var(--r-lg);padding:clamp(20px,3vw,32px);display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form label.f{display:grid;gap:6px;font-size:14px;font-weight:500}
+.form input[type=text],.form input[type=email],.form input[type=tel]{font:400 16px var(--body);padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--white);color:var(--ink);width:100%;min-width:0}
+.form input:focus{outline:none;border-color:var(--mint-deep)}
+.form .wide{grid-column:1/-1}
+.check{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;font-size:13.5px;line-height:1.4;color:var(--ink-2)}
+.check input{width:20px;height:20px;margin:0;accent-color:var(--mint-deep)}
+.form__ok{background:var(--mint-wash);border-radius:12px;padding:14px;font-size:15px}
+@media (max-width:900px){.close{grid-template-columns:1fr}.close .logo{--w:240px}}
+@media (max-width:460px){.form{grid-template-columns:1fr}}
+
+/* footer */
+footer{background:var(--ink);color:#c5d0cc;margin-top:clamp(56px,8vw,112px);padding-block:clamp(40px,5vw,72px) 32px;font-size:15.5px}
+.foot{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:36px}
+.foot .logo{--w:128px;color:var(--white);margin-bottom:22px}
+.foot h4{font:500 14px var(--body);color:#8fa09b;margin:0 0 14px}
+.foot ul{display:grid;gap:10px}
+.foot a{text-decoration:none;color:var(--white);transition:color .18s}
+.foot a:hover{color:var(--mint)}
+.sel{user-select:all;color:var(--white)}
+.wa{display:inline-flex;align-items:center;gap:10px;margin-top:6px}
+.wa span{width:40px;height:40px;border-radius:50%;background:var(--white);color:var(--ink);display:grid;place-items:center;font-size:21px;transition:background .18s}
+.wa:hover span{background:var(--mint)}
+.foot .store{background:#2c3a37;margin-bottom:8px;width:100%;max-width:190px}
+.foot .store:hover{background:var(--mint-deep);color:var(--white)}
+.legal{margin-top:44px;padding-top:22px;border-top:1px solid #33423f;display:flex;flex-wrap:wrap;gap:8px 24px;font-size:13.5px;color:#8fa09b}
+.legal a{color:#8fa09b;text-decoration:underline;text-underline-offset:3px}
+.legal a:hover{color:var(--white)}
+@media (max-width:900px){.foot{grid-template-columns:1fr 1fr}}
+
+.totop{position:fixed;right:max(18px,calc((100vw - 1340px)/2));bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:30;width:54px;height:54px;border-radius:50%;border:0;background:var(--mint-deep);color:var(--white);font-size:24px;display:grid;place-items:center;cursor:pointer;box-shadow:0 14px 28px -12px rgba(20,50,45,.6);opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .25s,transform .25s,background .18s}
+.totop.show{opacity:1;pointer-events:auto;transform:none}
+.totop:hover{background:var(--ink)}
+</style>
+
+<div class="note" id="top">Redesign concept for a design portfolio. This is not the official Mojo website, and the form below sends nothing.</div>
+
+<header class="top">
+  <div class="wrap top__in">
+    <a href="#top" class="logo" aria-label="Mojo, home"><span class="logo__ink"></span><i class="pupil"></i><i class="pupil"></i></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#product">Product overview</a><a href="https://mojo.education/modules/mojo-ai/">Mojo AI</a><a href="#pricing">Pricing</a><a href="https://mojo.education/faq/">FAQ</a><a href="#blog">Blog</a>
+    </nav>
+    <button class="lang" type="button" aria-label="Language: English">English %%i:chevron-down%%</button>
+    <a class="btn btn--ink btn--sm" href="#demo">Get a demo</a>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+  <section class="hero">
+    <div class="hero__main">
+      <div class="hero__copy">
+        <h1>Mojo — school management system</h1>
+        <p class="lead">Streamlining school operations so educators can focus on what matters most: teaching and student growth</p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#demo">Get a demo</a>
+          <a class="btn btn--ghost" href="https://youtu.be/jT6MJNn6I1o"><span class="play"></span>Watch a video</a>
+        </div>
+      </div>
+      <div class="stage" id="stage">
+        <div class="persona">
+          <div class="persona__who swap"><img id="pImg" alt=""><div><b id="pRole"></b><q id="pQuote"></q></div></div>
+          <div class="persona__ui"><img class="swap" id="pUi" alt=""></div>
+        </div>
+        <img class="phone" src="%%phone_hero%%" alt="Mojo mobile app showing a student's grades in Biology">
+        <div class="roletabs" role="tablist" aria-label="Who uses Mojo" id="roleTabs"></div>
+      </div>
+    </div>
+    <ul class="usps">
+      <li class="usp"><span style="background:var(--mint-deep)">%%i:clipboard-check%%</span>All school processes are under control</li>
+      <li class="usp"><span style="background:var(--violet)">%%i:clock%%</span>Save teachers’ time</li>
+      <li class="usp"><span style="background:#8a3fb8">%%i:heart%%</span>Boost parent engagement and increase NPS</li>
+    </ul>
+  </section>
+</div>
+
+<section class="band" aria-labelledby="trustH">
+  <div class="wrap trust__head">
+    <div><h2 id="trustH">Schools that trust Mojo</h2>
+      <div class="trust__facts"><span><b>50,000+</b>users every day</span><span><b>11</b>countries</span><span><b>4</b>curricula: British, Cambridge, IB, local</span></div></div>
+    <p class="lead">We work with schools following various educational standards and help them reach new heights with the expertise of market leaders.</p>
+  </div>
+  <div class="marq" id="marq">
+    <ul class="marq__row">%%logos_a%%</ul>
+    <ul class="marq__row marq__row--rev">%%logos_b%%</ul>
+  </div>
+</section>
+
+<div class="wrap">
+  <section class="band band--flush" id="roles">
+    <div class="head"><h2>Built for everyone at school</h2><p class="lead">Free up time for what truly matters.</p></div>
+    <div class="roles" id="rolesBox">
+      <article class="role role--sand on" tabindex="0"><img src="%%role_leaders%%" alt="">
+        <div class="role__body"><h3>For School Leaders</h3><p class="role__teaser">The whole school in one interface</p><ul>
+          <li><span>%%i:sliders-horizontal%%</span>Flexible customization for your school’s unique model</li>
+          <li><span>%%i:chart-pie%%</span>Tools to manage the entire educational process</li>
+          <li><span>%%i:graduation-cap%%</span>Increase your school’s value in the eyes of parents</li></ul></div></article>
+      <article class="role role--peri" tabindex="0"><img src="%%role_teachers%%" alt="">
+        <div class="role__body"><h3>For Teachers</h3><p class="role__teaser">Planning, grading and reports in one place</p><ul>
+          <li><span>%%i:layers%%</span>All the learning information in one place</li>
+          <li><span>%%i:clock%%</span>Save time on lesson planning and reporting</li>
+          <li><span>%%i:book-open-check%%</span>Easy-to-use digital gradebook</li></ul></div></article>
+      <article class="role role--mint" tabindex="0"><img src="%%role_parents%%" alt="">
+        <div class="role__body"><h3>For Parents and Students</h3><p class="role__teaser">Timetable, homework and grades on a phone</p><ul>
+          <li><span>%%i:smartphone%%</span>All learning information in a mobile app</li>
+          <li><span>%%i:eye%%</span>Open school — transparent processes</li>
+          <li><span>%%i:folder-heart%%</span>Portfolio from enrollment to university choice</li></ul></div></article>
+    </div>
+  </section>
+
+  <section class="band band--flush" id="product">
+    <div class="mods">
+      <div class="head"><h2>All processes in one place — in Mojo</h2><p class="lead">We help schools streamline over 60 processes, from assessment and attendance to admissions, surveys, healthcare and HR.</p></div>
+      <div class="tabs" role="tablist" aria-label="Module groups" id="modTabs"></div>
+      <div class="grid" id="modGrid"></div>
+      <div class="mods__foot"><span>Mojo makes everyday routines feel effortless and automatic.</span><a class="btn btn--primary btn--lg" href="https://mojo.education/modules/">All features %%i:arrow-right%%</a></div>
+    </div>
+  </section>
+
+  <section class="band band--flush" aria-label="Video about Mojo">
+    <a class="video" href="https://youtu.be/jT6MJNn6I1o"><img src="%%ribbon%%" alt="">
+      <span class="video__copy"><h2>Video about Mojo</h2><p>See how a school day runs on the platform before you talk to anyone.</p></span>
+      <span class="video__label"><span class="play"></span>Watch a video</span></a>
+  </section>
+
+  <section class="band band--flush" aria-label="Mobile app">
+    <div class="app">
+      <div class="app__copy"><img src="%%rabbit_phone%%" alt=""><h2>Convenient on any device</h2>
+        <p class="lead">At school, at home, or on the go, Mojo is always at hand: in the browser and in a user-friendly mobile app for parents, students, and teachers.</p>
+        <div class="stores">
+          <a class="store" href="https://apps.apple.com/us/app/mojo-education/id6451050702">%%i:apple%%<span><small>Download on the</small><b>App Store</b></span></a>
+          <a class="store" href="https://play.google.com/store/apps/details?id=com.nucleus3">%%i:play%%<span><small>Get it on</small><b>Google Play</b></span></a>
+        </div></div>
+      <img class="app__devices" src="%%devices%%" alt="Mojo on a phone and a laptop: academic performance by subject and yearly statistics">
+    </div>
+  </section>
+
+  <section class="band band--flush" id="pricing">
+    <div class="head"><h2>Mojo pricing</h2><p class="lead">It depends on the number of students. One yearly fee and a one-time installation payment.</p></div>
+    <div class="sizes" id="sizes" role="group" aria-label="Number of students"></div>
+    <div class="price">
+      <div class="price__main">
+        <div class="amount" id="pAmount"></div>
+        <div class="facts" id="pFacts"></div>
+        <a class="btn btn--primary" href="#demo">Get an offer</a>
+        <p class="fine">Every plan includes onboarding and 1.5 months of intensive support.</p>
+      </div>
+      <div class="price__side"><h3>What is included</h3><ul class="incl" id="pIncl"></ul></div>
+    </div>
+  </section>
+
+  <section class="band band--flush" aria-labelledby="tmH">
+    <div class="head"><h2 id="tmH">Feedback from school leaders</h2><p class="lead">Directors and founders on what changed after they moved to Mojo.</p></div>
+    <div class="tm">
+      <div class="tm__main">
+        <img class="tm__photo swap" id="tmPhoto" alt="">
+        <div class="tm__text">
+          <div class="tm__bar"><span class="tm__mark">%%i:quote%%</span>
+            <div class="tm__nav"><button class="round" id="tmPrev" type="button" aria-label="Previous review">%%i:arrow-left%%</button><span id="tmCount"></span><button class="round" id="tmNext" type="button" aria-label="Next review">%%i:arrow-right%%</button></div></div>
+          <blockquote class="tm__lead swap" id="tmLead"></blockquote>
+          <div class="tm__rest" id="tmRest" hidden></div>
+          <button class="tm__more" id="tmMore" type="button" aria-expanded="false">Read the full review</button>
+          <div class="tm__who"><b id="tmName"></b><span id="tmRole"></span></div>
+        </div>
+      </div>
+      <div class="tm__pick" role="tablist" aria-label="Choose a review" id="tmPick"></div>
+    </div>
+  </section>
+
+  <section class="band band--flush" id="rollout">
+    <div class="head"><h2>Implementation stages of Mojo</h2><p class="lead">Seven steps from the first call to everyday use. You fill the system stage by stage, and we stay with you the whole way.</p></div>
+    <div class="roll">
+      <ol class="steps">
+        <li><div><h3>Set up a dedicated implementation chat</h3><p>Simple communication: one place for every question from your team.</p></div></li>
+        <li><div><h3>Kickoff call</h3><p>We present the implementation plan and align on steps and timelines.</p></div></li>
+        <li><div><h3>The school fills the system step by step</h3><p>After each stage, we review the data and provide recommendations.</p></div></li>
+        <li><div><h3>Support throughout the entire journey</h3><p>We answer all questions and help set everything up correctly.</p></div></li>
+        <li><div><h3>Provide training materials</h3><p>Schools train teachers and parents with ready-made guides.</p></div></li>
+        <li><div><h3>Intensive support<span class="chip">1.5 months</span></h3><p>Ensuring the smoothest possible launch.</p></div></li>
+        <li><div><h3>Transition to technical support</h3><p>Through the “Support” module on the platform, we stay in touch to assist with any issues.</p></div></li>
+      </ol>
+      <div class="roll__art"><img src="%%hero_lion%%" alt=""><img src="%%rocket%%" alt=""></div>
+    </div>
+    <div class="ask"><p>Want to learn more? We’ll get in touch to discuss the details.</p><a class="btn btn--primary" href="#demo">Get a demo</a></div>
+  </section>
+
+  <section class="band band--flush" id="blog">
+    <div class="head"><h2>Our Blog</h2></div>
+    <div class="posts">
+      <a class="post" href="https://mojo.education/blog/academic-reporting-from-traditional-practice-to-modern-tools/"><div class="post__cover">
+        <svg viewBox="0 0 400 250" role="img" aria-label=""><rect width="400" height="250" fill="#f2ede8"/><circle cx="330" cy="62" r="92" fill="#e8ded4"/>
+          <g transform="rotate(-8 190 140)"><rect x="96" y="46" width="176" height="200" rx="18" fill="#fff" opacity=".7"/></g>
+          <g transform="rotate(5 210 140)"><rect x="118" y="38" width="184" height="216" rx="18" fill="#fff"/>
+            <circle cx="150" cy="72" r="14" fill="#dcefeb"/><rect x="174" y="62" width="84" height="9" rx="4.5" fill="#1c2927"/><rect x="174" y="78" width="54" height="7" rx="3.5" fill="#c9d3cf"/>
+            <g font-family="Geologica,sans-serif" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">
+              <rect x="138" y="108" width="98" height="8" rx="4" fill="#dfe6e3"/><rect x="244" y="100" width="40" height="24" rx="12" fill="#23766a"/><text x="264" y="117">4.6</text>
+              <rect x="138" y="146" width="76" height="8" rx="4" fill="#dfe6e3"/><rect x="244" y="138" width="40" height="24" rx="12" fill="#23766a"/><text x="264" y="155">4.4</text>
+              <rect x="138" y="184" width="88" height="8" rx="4" fill="#dfe6e3"/><rect x="244" y="176" width="40" height="24" rx="12" fill="#efb648"/><text x="264" y="193" fill="#1c2927">3.9</text>
+              <rect x="138" y="222" width="64" height="8" rx="4" fill="#dfe6e3"/><rect x="244" y="214" width="40" height="24" rx="12" fill="#23766a"/><text x="264" y="231">4.7</text></g></g>
+          <circle cx="64" cy="184" r="30" fill="none" stroke="#a9795a" stroke-width="13"/><circle cx="73" cy="198" r="8" fill="#a9795a"/></svg></div>
+        <time datetime="2024-06-23">23 June 2024</time><h3>Academic Reporting: From Traditional Practice to Modern Tools</h3><p>What an academic report is for, and how to give families a clear picture of progress in each subject.</p><span class="post__go">Read the article %%i:arrow-right%%</span></a>
+      <a class="post" href="https://mojo.education/blog/data-driven-decision-making-in-schools-a-path-to-more-effective-management/"><div class="post__cover">
+        <svg viewBox="0 0 400 250" role="img" aria-label=""><rect width="400" height="250" fill="#e5ebfd"/><circle cx="60" cy="40" r="110" fill="#d6defa"/>
+          <g><rect x="70" y="150" width="34" height="100" rx="17" fill="#fff"/><rect x="118" y="118" width="34" height="132" rx="17" fill="#6a55d6"/><rect x="166" y="136" width="34" height="114" rx="17" fill="#fff"/><rect x="214" y="92" width="34" height="158" rx="17" fill="#3a78d4"/><rect x="262" y="108" width="34" height="142" rx="17" fill="#fff"/><rect x="310" y="56" width="34" height="194" rx="17" fill="#23766a"/></g>
+          <polyline points="87,128 135,96 183,112 231,68 279,84 327,34" fill="none" stroke="#1c2927" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#fff" stroke="#1c2927" stroke-width="4"><circle cx="87" cy="128" r="7"/><circle cx="135" cy="96" r="7"/><circle cx="183" cy="112" r="7"/><circle cx="231" cy="68" r="7"/><circle cx="279" cy="84" r="7"/></g><circle cx="327" cy="34" r="11" fill="#efb648" stroke="#1c2927" stroke-width="4"/></svg></div>
+        <time datetime="2024-12-05">5 December 2024</time><h3>Data-Driven Decision-Making in Schools: A Path to More Effective Management</h3><p>Making decisions on evidence from data instead of relying on intuition or assumptions.</p><span class="post__go">Read the article %%i:arrow-right%%</span></a>
+      <a class="post" href="https://mojo.education/blog/how-big-data-can-improve-student-performance/"><div class="post__cover">
+        <svg viewBox="0 0 400 250" role="img" aria-label="" id="dotsCover"><rect width="400" height="250" fill="#dbedea"/></svg></div>
+        <time datetime="2024-12-06">6 December 2024</time><h3>How Big Data Can Improve Student Performance</h3><p>Patterns in school data that show how students learn and where to improve.</p><span class="post__go">Read the article %%i:arrow-right%%</span></a>
+    </div>
+    <div class="posts__all"><a class="btn btn--ink btn--lg" href="https://mojo.education/blog/">All articles %%i:arrow-right%%</a></div>
+  </section>
+
+  <section class="close" id="demo">
+    <div class="close__copy">
+      <span class="logo" role="img" aria-label="Mojo"><span class="logo__ink"></span><i class="pupil"></i><i class="pupil"></i></span>
+      <h2>Get Started with Mojo</h2>
+      <p>Our specialist will give you a personalized demo and show the platform’s features in action.</p>
+    </div>
+    <form class="form" id="demoForm" novalidate>
+      <label class="f" for="f-name">Your name<input type="text" id="f-name" name="name" autocomplete="name" required></label>
+      <label class="f" for="f-email">Your email<input type="email" id="f-email" name="email" autocomplete="email" required></label>
+      <label class="f" for="f-phone">Phone<input type="tel" id="f-phone" name="phone" autocomplete="tel"></label>
+      <label class="f" for="f-org">Organization<input type="text" id="f-org" name="org" autocomplete="organization" required></label>
+      <label class="check wide" for="f-agree"><input type="checkbox" id="f-agree" name="agree" required><span>I confirm my agreement to the <a href="https://mojo.education/user-policy/">User Agreement</a>, <a href="https://mojo.education/privacy-policy/">Privacy Policy</a> and <a href="https://mojo.education/personal-policy/">Personal Data Processing Policy</a>, and I consent to the <a href="https://mojo.education/personal-approval/">processing of personal data</a>.</span></label>
+      <label class="check wide" for="f-news"><input type="checkbox" id="f-news" name="news"><span>I agree to receive emails from Mojo (news, discounts, and more).</span></label>
+      <button class="btn btn--primary wide" type="submit">Get a demo</button>
+      <p class="form__ok wide" id="formOk" hidden></p>
+    </form>
+  </section>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><span class="logo" role="img" aria-label="Mojo"><span class="logo__ink"></span><i class="pupil"></i><i class="pupil"></i></span>
+        <ul><li><h4>Sales Department</h4><span class="sel">sales@mojo.education</span></li><li style="margin-top:10px"><h4>Technical support</h4><span class="sel">support@mojo.education</span></li>
+        <li><a class="wa" href="https://wa.me/79310093210"><span>%%i:message-circle%%</span>WhatsApp</a></li></ul></div>
+      <div><h4>Product</h4><ul><li><a href="https://mojo.education/modules/">Product overview</a></li><li><a href="https://mojo.education/modules/mojo-ai/">Mojo AI</a></li><li><a href="https://mojo.education/pricing/">Pricing</a></li><li><a href="https://mojo.education/faq/">FAQ</a></li><li><a href="https://mojo.education/blog/">Blog</a></li></ul></div>
+      <div><h4>Language</h4><ul><li><a href="https://mojo.education/">English</a></li><li><a href="https://ru.mojo.education/">Русский</a></li><li><a href="https://pt.mojo.education/">Português</a></li></ul></div>
+      <div><h4>Mobile app</h4>
+        <a class="store" href="https://apps.apple.com/us/app/mojo-education/id6451050702">%%i:apple%%<span><small>Download on the</small><b>App Store</b></span></a>
+        <a class="store" href="https://play.google.com/store/apps/details?id=com.nucleus3">%%i:play%%<span><small>Get it on</small><b>Google Play</b></span></a></div>
+    </div>
+    <div class="legal"><span>Mojo Educational Technologies JSC © 2026</span><a href="https://mojo.education/privacy-policy/">Privacy policy</a><a href="https://mojo.education/user-policy/">Terms of Use</a><a href="https://mojo.education/cookie-policy/">Cookie policy</a><a href="https://mojo.education/personal-policy/">Personal data processing policy</a><a href="https://mojo.education/personal-approval/">Consent to the processing of personal data</a></div>
+  </div>
+</footer>
+
+<button class="totop" id="toTop" type="button" aria-label="Back to top">%%i:arrow-up%%</button>
+
+<script>
+(function(){
+  var IC=%%icons%%, IMG=%%imgs%%;
+  var $=function(id){return document.getElementById(id)};
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function svg(n){return '<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>'}
+  function tabs(host,labels,onPick,attr){
+    labels.forEach(function(l,i){var b=document.createElement("button");b.type="button";b.innerHTML=l;if(attr==="aria-selected")b.setAttribute("role","tab");
+      b.addEventListener("click",function(){pick(i,true)});host.appendChild(b)});
+    function pick(i,byUser){[].forEach.call(host.children,function(b,j){b.setAttribute(attr,j===i?"true":"false")});onPick(i,byUser)}
+    pick(0,false);return pick;
+  }
+  function swap(els,fn){if(reduce){fn();return}els.forEach(function(e){e.classList.add("out")});setTimeout(function(){fn();els.forEach(function(e){e.classList.remove("out")})},240)}
+
+  /* hero personas: rotate by themselves until the visitor takes over */
+  var people=[["head","Head of school","I manage all processes from a single interface.","List of departments"],["director","Academic director","With analytics, I know our strengths and weaknesses.","Student performance by subject"],["teacher","Teacher","I like having all the information in one place.","Lesson information"],["student","Student","I always know my timetable and homework.","Assessment in Literature"],["parent","Parent","Modern school, modern app.","School news"]];
+  var cur=0,auto=!reduce,first=true,who=document.querySelector(".persona__who");
+  var pickRole=tabs($("roleTabs"),people.map(function(p){return p[1]}),function(i,byUser){
+    if(byUser)auto=false;cur=i;var p=people[i];
+    var set=function(){$("pImg").src=IMG["por_"+p[0]];$("pRole").textContent=p[1];$("pQuote").textContent=p[2];$("pUi").src=IMG["ui_"+p[0]];$("pUi").alt="Mojo screen: "+p[3]};
+    if(first){first=false;set()}else swap([who,$("pUi")],set);
+  },"aria-selected");
+  var hold=false,st=$("stage");
+  ["mouseenter","focusin"].forEach(function(e){st.addEventListener(e,function(){hold=true})});
+  ["mouseleave","focusout"].forEach(function(e){st.addEventListener(e,function(){hold=false})});
+  setInterval(function(){if(auto&&!hold&&!document.hidden)pickRole((cur+1)%people.length,false)},4500);
+
+  /* logo marquee: duplicate each row so the loop is seamless */
+  [].forEach.call(document.querySelectorAll(".marq__row"),function(r){if(!reduce)r.innerHTML+=r.innerHTML.replace(/alt="[^"]*"/g,'alt="" aria-hidden="true"')});
+
+  /* role cards */
+  var roles=[].slice.call(document.querySelectorAll(".role"));
+  function openRole(el){roles.forEach(function(r){r.classList.toggle("on",r===el)})}
+  roles.forEach(function(r){["mouseenter","focus","click"].forEach(function(e){r.addEventListener(e,function(){openRole(r)})})});
+
+  /* modules */
+  var M="https://mojo.education/modules/";
+  var groups=[
+    ["Learning process","--mint-wash","--mint-deep",[["Gradebook","Marks, attendance and comments in one grid","book-open-check","Gradebook/"],["Student Gradebook","Every grade and what it is made of","notebook-pen","student-gradebook/"],["Timetable","Lessons, rooms and changes for the day","clock","timetable/"],["Timetable Construction tool","Build the schedule and catch clashes","calendar-cog","timetable-construction-tool/"],["Group Management","Classes, streams and electives","users","group-management/"],["Academic Year Planning","Terms, holidays and curriculum plans","calendar-range","academic-year-planning/"],["Assessment","Formative, summative and criteria-based","clipboard-check","assessment/"],["Academic Reports","Term reports with teacher comments","file-text","akademicheskie-otchety/"],["Homework","Set it, hand it in, mark it","backpack","homework/"],["Exams","Sessions and results","file-check","exams/"],["Courses and Learning Materials","Lessons, files and video in one library","monitor-play","courses-and-learning-materials/"],["Diagnostics","Baseline tests and progress checks","search-check","diagnostics/"],["Lesson Observations","Structured feedback for teachers","eye","lesson-observations/"],["Educational Analytics","Trends by class, subject and period","chart-pie","educational-analytics/"],["Mojo AI","An assistant for everyday school work","bot","mojo-ai/"]]],
+    ["Student development","--peri","--blue",[["Soft skills","Track skills alongside grades","sparkles"],["Mojo Points","Recognition for effort and behaviour","award"],["Portfolio","From enrollment to university choice","briefcase"],["Skills development","Goals and progress for each student","target"]]],
+    ["Wellbeing","--rose","#b5503f",[["Attendance","Daily registers and absence reasons","user-check"],["Behavior","Incidents, praise and follow-up","heart-handshake"],["Healthcare","Medical notes the right staff can see","heart-pulse"]]],
+    ["Communication","--lilac","--violet",[["Messages","School, teachers and families in one channel","message-circle"],["Surveys","Ask parents and students, see results","list-checks"],["Mobile app","Everything families need on a phone","smartphone"]]],
+    ["Administration","--butter","#9a6a12",[["Admissions","From first enquiry to enrollment","door-open"],["HR","Staff records and workload","id-card"],["Report Builder","Your own report layouts","layout-template"],["Educational Content","A shared library for the school","library"],["Support","Help from the Mojo team inside the platform","life-buoy"]]]
+  ];
+  var v=function(c){return c.charAt(0)==="-"?"var("+c+")":c};
+  tabs($("modTabs"),groups.map(function(g){return g[0]+"<span>"+g[3].length+"</span>"}),function(i){var g=groups[i];
+    $("modGrid").innerHTML=g[3].map(function(m){return '<a class="mod" style="--tint:'+v(g[1])+';--tone:'+v(g[2])+'" href="'+M+(m[3]||"")+'"><span class="mod__ic">'+svg(m[2])+'</span><span class="mod__go">'+svg("arrow-up-right")+'</span><b>'+m[0]+'</b><small>'+m[1]+'</small></a>'}).join("");
+  },"aria-selected");
+
+  /* pricing */
+  var mods=["Basic Module Package","Report Builder","Soft skills","Admissions","Educational Content","Mojo Points"];
+  var tiers=[["Up to 100",100,1099,150,1],["Up to 200",200,2299,300,2],["Up to 300",300,3499,450,3],["Up to 400",400,4699,650,4],["Up to 500",500,5899,800,5],["Up to 750",750,7099,950,6],["More than 750",0,0,0,6]];
+  var fmt=function(n){return n.toLocaleString("en-US")};
+  tabs($("sizes"),tiers.map(function(t){return t[0]}),function(i){
+    var t=tiers[i];
+    if(t[2]){$("pAmount").innerHTML="€"+fmt(t[2])+"<small>per year</small>";
+      $("pFacts").innerHTML="<span><b>€"+t[3]+"</b> installation payment, paid once</span><span>About <b>€"+(t[2]/t[1]).toFixed(2)+"</b> per student a year at "+t[1]+" students</span>";}
+    else{$("pAmount").innerHTML="Custom pricing";$("pFacts").innerHTML="<span>For large schools and school groups. We prepare an offer for your structure.</span>";}
+    $("pIncl").innerHTML=mods.map(function(m,j){var on=j<t[4];return '<li class="'+(on?"":"off")+'">'+svg(on?"check":"minus")+"<span>"+m+"</span>"+(on?"":"<small>from the “"+tiers[j][0]+"” plan</small>")+"</li>"}).join("");
+  },"aria-pressed");
+
+  /* testimonials */
+  var T=[
+    ["ruslan","Ruslan Galimzyanov","General Director, Heritage Education Group","55% 30%","Thanks to Mojo, we were able to optimize processes, simplify staff workload, and improve the overall efficiency of our schools.",["The Mojo platform is not just a modern solution for schools, but a truly well-designed product that adapts to our needs. The system includes key modules essential for effective work, such as preparing academic reports, managing schedules, and providing analytics.","Today, we confidently recommend Mojo Education as a reliable partner and the core management system for schools striving for meaningful change."]],
+    ["redbridge","Lyutsiya Shchipova & Laziz Rakhmatov","Founders / CEO, Redbridge International School","50% 35%","The number of calls from parents asking about their child’s progress has been reduced by half — now everything is visible at once.",["With Mojo, our internal processes became simpler and more transparent.","A convenient and flexible tool for the modern school."]],
+    ["firdavs","Firdavs Navruzov","Director, The Knowledge Academy","68% 35%","Using Mojo has also increased the accountability of our teachers, which in turn has led to improved overall academic performance.",["Implementing the Mojo service in our education system has significantly improved the organization of learning.","We especially value its user-friendly interface and the wide range of additional features.","The Mojo team’s willingness to listen to our needs and make corresponding updates to the service played a positive role in the accreditation process of our school."]],
+    ["sergey","Sergey Melnikov","Deputy Director of Academic Affairs, New Tone English Gymnasium","52% 35%","You can track students’ performance by quarter, see how the GPA is calculated, and what contributes to the final grades.",["Mojo is a convenient platform for school work, with an intuitive interface and a wide range of automated processes. As an academic director, I especially value the access to different types of analytics.","In the grade reports, top-performing and low-performing students are highlighted in different colors, making the analysis of results much easier. This greatly simplifies data review and helps build the educational process our school strives for."]],
+    ["svetlana","Svetlana Besedina","Administrative Director, Co-Founder, Intellectum Academy","55% 30%","Teachers quickly adapted to working in the system, and students became more engaged in the learning process thanks to interactive content and a user-friendly interface.",["We started using Mojo at our school and are very pleased with the results. The platform is intuitive, functional, and perfectly suited for organizing learning.","I especially want to highlight the professional technical support and the team’s willingness to engage in dialogue — any issues are resolved quickly and effectively. The platform truly meets modern requirements and helps us make education more accessible, engaging, and efficient.","I recommend Mojo Education to all schools that strive for innovation and high-quality learning."]]
+  ];
+  var tcur=0,tfirst=true;
+  function more(open){$("tmRest").hidden=!open;$("tmMore").setAttribute("aria-expanded",open);$("tmMore").textContent=open?"Show less":"Read the full review"}
+  $("tmMore").addEventListener("click",function(){more($("tmRest").hidden)});
+  var pickT=tabs($("tmPick"),T.map(function(t){return '<img src="'+IMG["ph_"+t[0]]+'" alt="" style="object-position:'+t[3]+'"><span><b>'+t[1]+"</b><small>"+t[2].split(", ").pop()+"</small></span>"}),function(i){
+    tcur=i;var t=T[i];
+    var set=function(){$("tmPhoto").src=IMG["ph_"+t[0]];$("tmPhoto").alt=t[1];$("tmPhoto").style.objectPosition=t[3];$("tmLead").textContent="“"+t[4]+"”";
+      $("tmRest").innerHTML=t[5].map(function(p){return "<p>"+p+"</p>"}).join("");$("tmName").textContent=t[1];$("tmRole").textContent=t[2];$("tmCount").textContent=(i+1)+" / "+T.length;more(false)};
+    if(tfirst){tfirst=false;set()}else swap([$("tmPhoto"),$("tmLead")],set);
+  },"aria-selected");
+  [].forEach.call($("tmPick").children,function(b,i){b.setAttribute("aria-label",T[i][1])});
+  $("tmPrev").addEventListener("click",function(){pickT((tcur+T.length-1)%T.length,true)});
+  $("tmNext").addEventListener("click",function(){pickT((tcur+1)%T.length,true)});
+
+  /* third blog cover: a field of data points */
+  (function(){var s="",c=["#23766a","#23766a","#23766a","#6a55d6","#efb648"];
+    for(var x=0;x<16;x++)for(var y=0;y<10;y++){var w=Math.sin(x*.55+y*.35)+Math.cos(y*.8-x*.2),r=2.2+Math.max(0,w+1)*3.4,k=(x*7+y*13)%11;
+      s+='<circle cx="'+(26+x*23.2)+'" cy="'+(20+y*23.4)+'" r="'+r.toFixed(1)+'" fill="'+(k<2&&r>7?c[3+k]:(r>8?"#23766a":"#fff"))+'"/>'}
+    $("dotsCover").insertAdjacentHTML("beforeend",s)})();
+
+  /* form (concept only) */
+  $("demoForm").addEventListener("submit",function(e){e.preventDefault();var ok=$("formOk"),f=e.target;
+    ok.hidden=false;ok.textContent=!f.checkValidity()?"Please fill in your name, email and organization, and confirm the agreement.":"This is where the confirmation appears. In this concept nothing is sent."});
+
+  /* back to top */
+  var tt=$("toTop");addEventListener("scroll",function(){tt.classList.toggle("show",scrollY>700)},{passive:true});
+  tt.addEventListener("click",function(){scrollTo({top:0,behavior:reduce?"auto":"smooth"})});
+
+  /* eyes: one shared angle per logo, pupils always on the rim, so they can never cross */
+  if(!reduce){
+    var logos=[].slice.call(document.querySelectorAll(".logo")),raf=0,px=0,py=0;
+    addEventListener("pointermove",function(e){if(e.pointerType==="touch")return;px=e.clientX;py=e.clientY;if(!raf)raf=requestAnimationFrame(look)},{passive:true});
+    function look(){raf=0;logos.forEach(function(l){
+      var r=l.getBoundingClientRect();if(r.bottom<-200||r.top>innerHeight+200)return;
+      var a=Math.atan2(py-(r.top+r.height*.6344),px-(r.left+r.width*.6472)),dx=Math.cos(a).toFixed(3),dy=Math.sin(a).toFixed(3);
+      [].forEach.call(l.querySelectorAll(".pupil"),function(p){p.style.setProperty("--dx",dx);p.style.setProperty("--dy",dy)});});}
+  }
+})();
+</script>
