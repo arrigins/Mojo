@@ -1,7 +1,6 @@
-# Mojo — website redesign concept
+# Mojo — website
 
-Redesign concept of the [Mojo](https://mojo.education) school management system website, made for a design portfolio.
-**This is not the official Mojo website.** Forms send nothing.
+Design for school management system website, made for a design portfolio.
 
 - `index.html` — the site: Home, Product overview, Mojo AI, Pricing, FAQ, Blog, article, demo (`#home`, `#product`, `#ai`, `#pricing`, `#faq`, `#blog`, `#article`, `#demo`)
 - `boards/characters.html` — the Ojo character system built from the logo
